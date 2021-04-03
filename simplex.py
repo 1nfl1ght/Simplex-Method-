@@ -2,13 +2,13 @@ import numpy as np
 
 np.set_printoptions(precision=2, floatmode='fixed')
 
-k = np.array([0, 1, 8, 0, 0, 0])
+k = np.array([0, 3, 5, 0, 0, 0])
 
-T = np.array([[0, 8, 4, -1, 1, 0, 0],
-              [0, 5, -1, 2, 0, 1, 0],
-              [0, 1, -2, 1, 0, 0, 1]])
+t = np.array([[0, 56, 7, 3, 1, 0, 0],
+              [0, 23, -1, 4, 0, 1, 0],
+              [0, 4, -2, 1, 0, 0, 1]])
 
-TF = T.astype(np.float)
+tf = t.astype(np.float)
 
 
 # Расчет оценок
@@ -30,8 +30,6 @@ def deltaJ(matrix):
 def marks_check(grades):
     for grade in grades:
         if grade < 0:
-            return False
-        else:
             return True
 
 
@@ -66,34 +64,17 @@ def new_iteration(matrix):
             continue
         for j in range(1, len(m2[i])):
             matrix[i][j] = m2[i][j] - matrix[row_refer][j] * m2[i][marks.argmin() + 1]
-    deltaJ(TF)
-    reference_elem(TF, marks)
+    deltaJ(matrix)
 
 
+def start():
+    deltaJ(tf)
+    while marks_check(marks) is True:
+        reference_elem(tf, marks)
+        new_iteration(tf)
 
-deltaJ(TF)
-reference_elem(TF, marks)
-print(TF)
+
+start()
+print(tf)
 print(marks)
-print('Опорный элемент: ' + str(reference))
-print('Строка опорного элемента: ' + str(row_refer))
-print('\n')
-
-new_iteration(TF)
-print(TF)
-print(marks)
-print('Опорный элемент: ' + str(reference))
-print('Строка опорного элемента: ' + str(row_refer))
-print('\n')
-
-new_iteration(TF)
-print(TF)
-print(marks)
-print('Опорный элемент: ' + str(reference))
-print('Строка опорного элемента: ' + str(row_refer))
-print('\n')
-
-new_iteration(TF)
-print(TF)
-print(marks)
-print('Значение целевой функции: ' + str(marks[0]))
+print(marks[0])
