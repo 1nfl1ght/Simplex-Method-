@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="calculator.png"/>
+    <script src="script.js"></script>
+    <title>Simplex calculator</title>
+</head>
+<body>
+    <div class="main">
+        <div class="header">
+            <h1>Симплекс метод</h1>
+            <a href="https://github.com/1nfl1ght/Simplex-Method-Kolhozniy-" target="_blank"><img src="github_PNG20.png" alt="github"></a>
+        </div>
+        <div class="odds">
+            <table>
+                <tr>
+                    <td>
+                        x
+                        <sub>1</sub>
+                    </td>
+                    <td>
+                        x
+                        <sub>2</sub>
+                    </td>
+                    <td>
+                        b
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="number"  value="0">
+                    </td>
+                    <td>
+                        <input type="number" value="0">
+                    </td>
+                    <td>
+                        <input type="number" value="0">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="number" value="0">
+                    </td>
+                    <td>
+                        <input type="number" value="0">
+                    </td>
+                    <td>
+                        <input type="number" value="0">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="number" value="0">
+                    </td>
+                    <td>
+                        <input type="number" value="0">
+                    </td>
+                    <td>
+                        <input type="number" value="0">
+                    </td>
+                </tr>
+            </table>
+            <div class="solution">
+                <h1>Целевая функция: </h1>
+                <div class="enter">
+                    <p style="margin: 0px 0px;">x<sub>1</sub></p>
+                    <input id="test" type="number" value="0">
+                </div>
+                <div class="enter">
+                    <p style="margin: 0px 0px;">x<sub>2</sub></p>
+                    <input type="number" value="0">
+                </div>
+            </div>
+            <button id="btn" onclick="hui()" onselectstart="return false" onmousedown="return false">вычислить</button>
+            <div class="finish">
+                <h1>Результат: <span id="output"></span></h1>
+            </div>
+        </div>
+        </div>
+    </div>
+</body>
+</html>
