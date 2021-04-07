@@ -57,17 +57,18 @@ let marks = new Array();
 
 // Расчет оценок
 function deltaJ(matrix) {
-    let p = 1;  // индекс элементов массива с оценками
+    let index_j = 1;  // индекс элементов массива с оценками
     marks = [];
     let a = marks.length;
     while (a != 6){
         mark = 0;
         for (let i = 0; i < matrix.length; i++) {
-            mark += matrix[i][0] * matrix[i][p];
+            mark += matrix[i][0] * matrix[i][index_j];
         }
-        mark -= k[p - 1];
+        mark -= k[index_j - 1];
+        marks.push(mark);
         a = marks.length;
-        p += 1;
+        index_j += 1;
     }
 }
 
@@ -77,16 +78,15 @@ function marks_check(grades) {
             return true;
         }
     }
-    return false;
 }
     
 
 
 // Нахождение опорного элемента
 function reference_elem(matrix, grades) {
-    let reference;
+    window.reference;
     let min_reference;  // Будет возвращать значение опорного элемента
-    let row_refer; // Строка с опорным элементом
+    window.row_refer; // Строка с опорным элементом
     for (let i = 0; i < matrix.length; i++) {
         if (matrix[i][argmin(grades) + 1] > 0) {
             min_reference = matrix[i][argmin(grades) + 1];
@@ -133,6 +133,8 @@ function start() {
     while (marks_check(marks) == true) {
        reference_elem(t, marks);
        new_iteration(t);
+       console.log(t);
+       console.log(marks);
     }
 }
 
@@ -141,10 +143,13 @@ function hui() {
     write_init();
     console.log(initial_data);
     push_init(initial_data);
-    console.log(k);
-    objective_func();
     console.log(t);
     console.log(k);
+    // objective_func();
+    // console.log(t);
+    // console.log(k);
+    // start();
+    // console.log(marks[0]);
 }
 // start()
 // console.log(tf)
