@@ -25,7 +25,7 @@ function push_init(your_data) {
         for (let j = 2; j < 4; j++) {
             if (p == 2 || p == 5) {
                 t[i][j] = initial_data[p+1];
-                p++;
+                p+=2;
             }
             else {
                 t[i][j] = initial_data[p];
@@ -33,13 +33,24 @@ function push_init(your_data) {
             }
         }
     }
-    console.log(t)
 }
 
-function hui() {
-    write_init();
-    console.log(initial_data);
-    push_init(initial_data);
+function objective_func() {
+    for (let i = 1, j = 9; i < 2, j < 11; i++, j++) {
+        k[i] = initial_data[j];
+    }
+}
+
+function argmin(your_arr) {
+    let min = your_arr[0];
+    let index_min = 0;
+    for (let i = 0; i < your_arr.length; i++) {
+        if (your_arr[i] < min) {
+            min = your_arr[i];
+            index_min = i;
+        }
+    }
+    return index_min;
 }
 
 let marks = new Array();
@@ -55,17 +66,18 @@ function deltaJ(matrix) {
             mark += matrix[i][0] * matrix[i][p];
         }
         mark -= k[p - 1];
-        a = length(marks);
+        a = marks.length;
         p += 1;
     }
 }
 
 function marks_check(grades) {
-    for (grade of grades) {
-        if (grade < 0) {
-            return True;
+    for (let i = 0; i < grades.length; i++) {
+        if (grades[i] < 0) {
+            return true;
         }
     }
+    return false;
 }
     
 
@@ -76,16 +88,16 @@ function reference_elem(matrix, grades) {
     let min_reference;  // Будет возвращать значение опорного элемента
     let row_refer; // Строка с опорным элементом
     for (let i = 0; i < matrix.length; i++) {
-        if (matrix[i][grades.argmin() + 1] > 0) {
-            min_reference = matrix[i][grades.argmin() + 1];
+        if (matrix[i][argmin(grades) + 1] > 0) {
+            min_reference = matrix[i][argmin(grades) + 1];
             row_refer = i;
             score = matrix[i][1] / min_reference;
             break;
         }
     }
     for (let i = 0; i < matrix.length; i++) {
-        if ((matrix[i][1]/matrix[i][grades.argmin() + 1] < score) && (matrix[i][1]/matrix[i][grades.argmin() + 1] > 0)) {
-            min_reference = matrix[i][grades.argmin() + 1];
+        if ((matrix[i][1]/matrix[i][argmin(grades) + 1] < score) && (matrix[i][1]/matrix[i][argmin(grades) + 1] > 0)) {
+            min_reference = matrix[i][argmin(grades) + 1];
             row_refer = i;
         }
     }
@@ -99,7 +111,7 @@ function reference_elem(matrix, grades) {
 function new_iteration(matrix) {
     let m2 = matrix;
     let r = reference;  // Беру опорный элемент
-    matrix[row_refer][0] = k[marks.argmin()]
+    matrix[row_refer][0] = k[argmin(marks)]
     for (let i = 1; i < matrix.length; i++) {
         matrix[row_refer][i] /= r;
     }
@@ -109,7 +121,7 @@ function new_iteration(matrix) {
         }
             
         for (let j = 1; j < m2[i].length; j++) {
-            matrix[i][j] = m2[i][j] - matrix[row_refer][j] * m2[i][marks.argmin() + 1];
+            matrix[i][j] = m2[i][j] - matrix[row_refer][j] * m2[i][argmin(marks) + 1];
         }
     }
     deltaJ(matrix);
@@ -117,16 +129,24 @@ function new_iteration(matrix) {
 
 
 function start() {
-    deltaJ(tf);
-     while (marks_check(marks) == True) {
-        reference_elem(tf, marks);
-        new_iteration(tf);
-     }
-     return marks[0];
+    deltaJ(t);
+    while (marks_check(marks) == true) {
+       reference_elem(t, marks);
+       new_iteration(t);
+    }
 }
 
-
+// Запуск программы
+function hui() {
+    write_init();
+    console.log(initial_data);
+    push_init(initial_data);
+    console.log(k);
+    objective_func();
+    console.log(t);
+    console.log(k);
+}
 // start()
-// print(tf)
+// console.log(tf)
 // print(marks)
 // print(marks[0])
