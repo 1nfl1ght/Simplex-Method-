@@ -109,7 +109,7 @@ function reference_elem(matrix, grades) {
 
 // Создание новой таблицы на основе старой
 function new_iteration(matrix) {
-    let m2 = matrix;
+    let m2 = matrix.slice();
     let r = reference;  // Беру опорный элемент
     matrix[row_refer][0] = k[argmin(marks)]
     for (let i = 1; i < matrix.length; i++) {
@@ -144,12 +144,13 @@ function hui() {
     console.log(initial_data);
     push_init(initial_data);
     console.log(t);
+    objective_func();
     console.log(k);
-    // objective_func();
-    // console.log(t);
-    // console.log(k);
-    // start();
-    // console.log(marks[0]);
+    deltaJ(t)
+    reference_elem(t, marks);
+    new_iteration(t);
+    console.log(t);
+    console.log(marks);
 }
 // start()
 // console.log(tf)
