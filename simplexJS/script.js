@@ -145,14 +145,15 @@ function start() {
 }
 
 // Запуск программы
-function hui() {
+function calc() {
     write_init();
     console.log(initial_data);
     push_init(initial_data);
     objective_func();
     
-    start()
-    console.log(marks[0])
+    start();
+    console.log(marks[0]);
+    document.querySelector('#output').innerHTML = marks[0];
     
     // reference_elem(t, marks)
     // new_iteration(t);
