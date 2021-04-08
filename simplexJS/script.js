@@ -114,11 +114,11 @@ function new_iteration(matrix) {
     for (let i = 0; i < matrix.length; i++) {
         m2.push(matrix[i].slice());
     }
-    console.log("Копия пред матрицы: ");
-    console.log(m2);
+    // console.log("Копия пред матрицы: ");
+    // console.log(m2);
     let r = reference;  // Беру опорный элемент
     matrix[row_refer][0] = k[argmin(marks)]
-    for (let i = 1; i < matrix.length; i++) {
+    for (let i = 1; i < matrix[0].length; i++) {
         matrix[row_refer][i] /= r;
     }
     for (let i = 0; i < matrix.length; i++) {
@@ -149,17 +149,24 @@ function hui() {
     write_init();
     console.log(initial_data);
     push_init(initial_data);
-    console.log(t);
     objective_func();
     
-    deltaJ(t)
-    console.log("Старые оценки: ")
-    console.log(marks)
-    reference_elem(t, marks);
-    new_iteration(t);
-    console.log("Матрица некст иетрации: ");
-    console.log(t);
-    console.log("Новые оценки: ")
-    console.log(marks);
-    console.log(reference);
+    start()
+    console.log(marks[0])
+    
+    // reference_elem(t, marks)
+    // new_iteration(t);
+    // console.log("оценки: ");
+    // console.log(marks);
+    // console.log(argmin(marks));
+    // console.log('Опорный элемент: ');
+    // console.log(reference_elem(t, marks));
+
+    // new_iteration(t);
+    // console.log(t);
+    // console.log("оценки: ")
+    // console.log(marks)
+    // console.log(argmin(marks))
+    // console.log('Опорный элемент: ')
+    // console.log(reference_elem(t, marks))
 }
