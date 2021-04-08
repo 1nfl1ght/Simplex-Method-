@@ -84,6 +84,7 @@ function marks_check(grades) {
 
 // Нахождение опорного элемента
 function reference_elem(matrix, grades) {
+    let score;
     window.reference;
     let min_reference;  // Будет возвращать значение опорного элемента
     window.row_refer; // Строка с опорным элементом
@@ -105,11 +106,16 @@ function reference_elem(matrix, grades) {
     return reference;
 }
     
-
+let m2 = new Array();
 
 // Создание новой таблицы на основе старой
 function new_iteration(matrix) {
-    let m2 = matrix.slice();
+    let m2 = [];
+    for (let i = 0; i < matrix.length; i++) {
+        m2.push(matrix[i].slice());
+    }
+    console.log("Копия пред матрицы: ");
+    console.log(m2);
     let r = reference;  // Беру опорный элемент
     matrix[row_refer][0] = k[argmin(marks)]
     for (let i = 1; i < matrix.length; i++) {
@@ -145,14 +151,15 @@ function hui() {
     push_init(initial_data);
     console.log(t);
     objective_func();
-    console.log(k);
+    
     deltaJ(t)
+    console.log("Старые оценки: ")
+    console.log(marks)
     reference_elem(t, marks);
     new_iteration(t);
+    console.log("Матрица некст иетрации: ");
     console.log(t);
+    console.log("Новые оценки: ")
     console.log(marks);
+    console.log(reference);
 }
-// start()
-// console.log(tf)
-// print(marks)
-// print(marks[0])
