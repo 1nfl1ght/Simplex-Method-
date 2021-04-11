@@ -1,0 +1,70 @@
+<html lang="en">
+  <head>
+    <style>
+      .chart-div {
+        min-height: 400px;
+        max-width: 1024px;
+      }
+    </style>
+    <meta charset="utf-8" />
+    <title>AnyChart Basic Example</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <input type="number" value="0" id="numberx">
+
+    <!-- <div class="chart-div">
+        <canvas class="myChart"></canvas>
+    </div> -->
+
+    <button onclick="createAPlot()">Нажми на меня</button>
+
+    <script>
+      let a = document.querySelector('input')
+      
+      let my_arr = [];
+
+      for (let i = 0; i < 10; i++) {
+          my_arr.push(i);
+      }
+
+      n = a.value
+
+      let b = my_arr.map(
+          function(currentValue, n){
+              return (currentValue*2);
+          }
+      );
+
+
+      const labels = my_arr;
+      const data = {
+      labels: labels,
+      datasets: [{
+          label: 'My First Dataset',
+          data: b,
+          fill: false,
+          borderColor: 'rgb(75, 192, 192)'
+      }]
+      };
+
+      let ctx = document.querySelector('.myChart').getContext('2d');
+      let chart = new Chart(ctx, {
+      // Тип графика
+      type: 'line',
+      data: data,
+      
+      // Настройки графиков
+      options: {}
+      });
+
+      function createAPlot() {
+        let plt = document.createElement('div');
+        plt.className('chart-div');
+        let cnsv = document.createElement('canvas');
+        cnvs.className('myChart');
+        plt.appendChild(cnsv);
+      }
+    </script>
+  </body>
+</html>
