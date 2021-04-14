@@ -18,8 +18,10 @@ for (let i = 0; i < myLength; ++i) {
     varArr.push(parseFloat(allinputs[i].value));
 }
 
+let b = [];
+
 function feature(x, y, b) {
-    let b = my_arr.map(
+    b = my_arr.map(
         function(currentValue){
             return ((b - x*currentValue)/y);
         }
