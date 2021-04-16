@@ -16,6 +16,7 @@ body {
     grid-template-areas:
     "header"
     "odds"
+    "graph"
 }
 
 .header > h1 {
@@ -85,22 +86,26 @@ table {
     text-align: center;
 }
 
-#btn {
+.btn {
     margin: 20px 0px;
     width: 200px;
     height: 50px;
     border: 3px solid coral;
     background: white;
     border-radius: 10px;
-    font-size: 24px;
+    font-size: 20px;
     color: black;
     transition: 0.5s;
 }
 
-#btn:hover {
+.btn:hover {
     transform: scale(1.1);
 }
 
-#btn:active {
+.btn:active {
     background-color: red;
+}
+
+.feature {
+    margin-top: 80px;
 }
