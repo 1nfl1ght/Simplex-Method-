@@ -6,8 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" href="calculator.png"/>
-    <script src="script.js"></script>
+    <script src="/script.js"></script>
+    <script src="jsplot.js"></script>
     <title>Simplex calculator</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="main">
@@ -68,16 +70,24 @@
                 <h1>Целевая функция: </h1>
                 <div class="enter">
                     <p style="margin: 0px 0px;">x<sub>1</sub></p>
-                    <input id="test" type="number" value="0">
+                    <input id="c1" type="number" value="0">
                 </div>
                 <div class="enter">
                     <p style="margin: 0px 0px;">x<sub>2</sub></p>
-                    <input type="number" value="0">
+                    <input id="c2" type="number" value="0">
                 </div>
             </div>
-            <button id="btn" onclick="calc()" onselectstart="return false" onmousedown="return false">вычислить</button>
+            <button class="btn" onclick="calc()" onselectstart="return false" onmousedown="return false">вычислить</button>
             <div class="finish">
                 <h1>Результат: <span id="output"></span></h1>
+            </div>
+        </div>
+        <div class="feature">
+            
+            <button class="btn" onclick="test()">Построить график</button>
+
+            <div class="chart-div">
+                <canvas class="myChart"></canvas>
             </div>
         </div>
         </div>
