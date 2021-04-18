@@ -7,9 +7,9 @@
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" href="calculator.png"/>
     <script src="/script.js"></script>
-    <script src="jsplot.js"></script>
+    <script src="/jsplot.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <title>Simplex calculator</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="main">
@@ -77,18 +77,17 @@
                     <input id="c2" type="number" value="0">
                 </div>
             </div>
-            <button class="btn" onclick="calc()" onselectstart="return false" onmousedown="return false">вычислить</button>
+            <button class="btn" onclick="calc()" onselectstart="return false" onmousedown="return false">Вычислить</button>
             <div class="finish">
                 <h1>Результат: <span id="output"></span></h1>
             </div>
         </div>
         <div class="feature">
             
-            <button class="btn" onclick="test()">Построить график</button>
+            <button class="btn" onclick="createAPlot()" onselectstart="return false" onmousedown="return false">Построить график</button>
 
-            <div class="chart-div">
-                <canvas class="myChart"></canvas>
-            </div>
+            <div id="tester"></div>
+
         </div>
         </div>
     </div>
