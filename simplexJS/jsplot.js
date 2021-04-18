@@ -1,16 +1,3 @@
-let my_arr = [];
-
-for (let i = 0; i < 10; i++) {
-    my_arr.push(i);
-}
-
-let labelsx = [];
-for (let i = 0; i < 16; i++) {
-    labelsx.push(i);
-}
-
-let varArr = [];
-
 // let variables = document.querySelectorAll('input[type="number"]');
 // let varLength = variables.length;
 
@@ -18,81 +5,63 @@ let varArr = [];
 //     varArr.push(parseFloat(variables[i].value));
 // }
 
-function feature(x, y, c) {
-  b = my_arr.map(
-      function(currentValue){
-          return ((c - x*currentValue)/y);
-      }
-  );
-}
 
-let b = [];
+// b = my_arr.map(
+//     function(currentValue){
+//         return ((c - x*currentValue)/y);
+//     }
+// );
 
-function run() {
-  let variables = document.querySelectorAll('input[type="number"]');
-  let varLength = variables.length;
 
-  for (let i = 0; i < varLength; ++i) {
-      varArr.push(parseFloat(variables[i].value));
-  }
+function createAPlot() {
 
-  
+  TESTER = document.querySelector('#tester');
 
-  const labels = labelsx
-  const data = {
-  labels: labels,
-  datasets: [{
-      label: 'My First Dataset',
-      data: b,
-      borderColor: 'rgb(75, 192, 192)'
-  }]
+  var trace1 = {
+    x: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+    y: [8, 7, 6, 5, 4, 3, 2, 1, 0],
+    name: 'Первый график',
+    type: 'scatter'
   };
-  function createAPlot() {
-    let ctx = document.querySelector('.myChart').getContext('2d');
-  let chart = new Chart(ctx, {
-  // Тип графика
-  type: 'line',
-  data: data,
+  var trace2 = {
+    x: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+    y: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+    name: 'Второй график',
+    type: 'scatter'
+  };
+  var data = [trace1, trace2];
 
-  // Настройки графиков
-  options: {
-    y: {
-      max: 25,
-      min: 0,
-      ticks: {
-            stepSize: 1
-        }
+  var layout = {
+    title: 'Графическое изображение решения',
+    xaxis: {
+      tick0: 0,
+      dtick: 1,
+      showgrid: true,
+      zeroline: true,
+      showline: true,
+      mirror: 'ticks',
+      gridcolor: '#bdbdbd',
+      gridwidth: 2,
+      zerolinecolor: '#969696',
+      zerolinewidth: 4,
+      linecolor: '#636363',
+      linewidth: 6
+    },
+    yaxis: {
+      tick0: 0,
+      dtick: 1,
+      showgrid: true,
+      zeroline: true,
+      showline: true,
+      mirror: 'ticks',
+      gridcolor: '#bdbdbd',
+      gridwidth: 2,
+      zerolinecolor: '#969696',
+      zerolinewidth: 4,
+      linecolor: '#636363',
+      linewidth: 6
     }
-  }
-  });
-  }
+  };
+
+  Plotly.newPlot('tester', data, layout);
 }
-
-// const labels = labelsx
-// const data = {
-// labels: labels,
-// datasets: [{
-//     label: 'My First Dataset',
-//     data: b,
-//     borderColor: 'rgb(75, 192, 192)'
-// }]
-// };
-// function createAPlot() {
-//   let ctx = document.querySelector('.myChart').getContext('2d');
-// let chart = new Chart(ctx, {
-// // Тип графика
-// type: 'line',
-// data: data,
-
-// // Настройки графиков
-// options: {
-//   y: {
-//     max: 25,
-//     min: 0,
-//     ticks: {
-//           stepSize: 1
-//       }
-//   }
-// }
-// });
-// }
