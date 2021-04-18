@@ -90,7 +90,7 @@ table {
     margin: 20px 0px;
     width: 200px;
     height: 50px;
-    border: 3px solid coral;
+    border: 3px solid #0B4571;
     background: white;
     border-radius: 10px;
     font-size: 20px;
@@ -103,9 +103,13 @@ table {
 }
 
 .btn:active {
-    background-color: red;
+    background-color: #0B4571;
 }
 
 .feature {
     margin-top: 80px;
+}
+
+#tester {
+    border: 3px solid #0B4571;
 }
