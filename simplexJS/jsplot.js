@@ -40,19 +40,19 @@ function note_data() {
 
   window.y1Values = xs.map(
     function(currentValue){
-        return ((-args1[0]*currentValue-args1[2])/args1[1]);
+        return ((-args1[0]*currentValue+args1[2])/args1[1]);
     }
   );
 
   window.y2Values = xs.map(
     function(currentValue){
-        return ((-args2[0]*currentValue-args2[2])/args2[1]);
+        return ((-args2[0]*currentValue+args2[2])/args2[1]);
     }
   );
 
   window.y3Values = xs.map(
     function(currentValue){
-        return ((-args3[0]*currentValue-args3[2])/args3[1]);
+        return ((-args3[0]*currentValue+args3[2])/args3[1]);
     }
   );
   }
