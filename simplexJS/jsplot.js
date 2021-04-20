@@ -14,19 +14,19 @@ function note_data() {
       varArr.push(parseFloat(variables[i].value));
   }
 
-  let args1 = [];
+  window.args1 = [];
 
   for (let i = 0; i < 3; i++) {
     args1.push(varArr[i]);
   }
 
-  let args2 = [];
+  window.args2 = [];
 
   for (let i = 3; i < 6; i++) {
     args2.push(varArr[i]);
   }
 
-  let args3 = [];
+  window.args3 = [];
 
   for (let i = 6; i < 9; i++) {
     args3.push(varArr[i]);
@@ -57,7 +57,6 @@ function note_data() {
   );
   }
 
-
 function createAPlot() {
   
   note_data()
@@ -67,20 +66,20 @@ function createAPlot() {
   var trace1 = {
     x: xs,
     y: y1Values,
-    name: 'Первый график',
+    name: args1[0]+ 'x' + ' + ' + args1[1] + 'y' + ' = ' + args1[2],
     type: 'scatter'
   };
   var trace2 = {
     x: xs,
     y: y2Values,
-    name: 'Второй график',
+    name: args2[0]+ 'x' + ' + ' + args2[1] + 'y' + ' = ' + args2[2],
     type: 'scatter'
   };
 
   var trace3 = {
     x: xs,
     y: y3Values,
-    name: 'третий',
+    name: args3[0]+ 'x' + ' + ' + args3[1] + 'y' + ' = ' + args3[2],
     type: 'scatter'
   };
 
@@ -99,10 +98,26 @@ function createAPlot() {
   var data = [trace1, trace2, trace3, trace4];
 
   var layout = {
+    legend: {
+      x: 1,
+      xanchor: 'right',
+      y: 1
+    },
+    autosize: false,
+    width: 650,
+    height: 700,
+    margin: {
+      l: 50,
+      r: 50,
+      b: 100,
+      t: 100,
+      pad: 4
+    },
     title: 'Графическое изображение решения',
     xaxis: {
       tick0: 0,
       dtick: 1,
+      range: [-5, 10],
       showgrid: true,
       zeroline: true,
       showline: true,
@@ -115,6 +130,9 @@ function createAPlot() {
       linewidth: 6
     },
     yaxis: {
+      tick0: 0,
+      dtick: 1,
+      range: [-5, 10],
       showgrid: true,
       zeroline: true,
       showline: true,
@@ -128,5 +146,5 @@ function createAPlot() {
     }
   };
 
-  Plotly.newPlot('tester', data, layout);
+  Plotly.newPlot('tester', data, layout, {showSendToCloud: true});
 }
