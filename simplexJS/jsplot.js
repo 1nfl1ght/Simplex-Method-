@@ -6,7 +6,7 @@ function note_data() {
 
   window.xs = []
 
-  for (let i = -5; i < 6; i++) {
+  for (let i = -5; i < 11; i++) {
     xs.push(i);
   }
 
