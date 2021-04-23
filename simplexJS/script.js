@@ -139,35 +139,23 @@ function start() {
     while (marks_check(marks) == true) {
        reference_elem(t, marks);
        new_iteration(t);
-       console.log(t);
-       console.log(marks);
+    //    console.log(t);
+    //    console.log(marks);
     }
 }
 
 // Запуск программы
 function calc() {
+    k = ([0, 0, 0, 0, 0, 0]);
+    t = ([[0, 0, 0, 0, 1, 0, 0],
+         [0, 0, 0, 0, 0, 1, 0],
+         [0, 0, 0, 0, 0, 0, 1]])
     write_init();
     console.log(initial_data);
     push_init(initial_data);
     objective_func();
     
     start();
-    console.log(marks[0]);
+    // console.log(marks[0]);
     document.querySelector('#output').innerHTML = marks[0];
-    
-    // reference_elem(t, marks)
-    // new_iteration(t);
-    // console.log("оценки: ");
-    // console.log(marks);
-    // console.log(argmin(marks));
-    // console.log('Опорный элемент: ');
-    // console.log(reference_elem(t, marks));
-
-    // new_iteration(t);
-    // console.log(t);
-    // console.log("оценки: ")
-    // console.log(marks)
-    // console.log(argmin(marks))
-    // console.log('Опорный элемент: ')
-    // console.log(reference_elem(t, marks))
 }
