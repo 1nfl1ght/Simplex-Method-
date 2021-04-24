@@ -55,35 +55,63 @@ function note_data() {
         return ((-args3[0]*currentValue+args3[2])/args3[1]);
     }
   );
+}
+
+function solve(a, b, c, d, e, f) {
+
+  window.dot_y = (a * f - c * d)/(a * e - b * d);
+  window.dot_x = (c * e - b * f)/(a * e - b * d);
+
+  let result = dot_x*obj_func[0] + dot_y*obj_func[1];
+
+  if (result == marks[0]) {
+    window.dot_trace = {
+      x: [dot_x],
+      y: [dot_y],
+      name: 'Максимальное значение',
+      mode: 'markers',
+      marker: {
+        color: 'red',
+        symbol: 'circle',
+        size: 16
+      }
+    };
   }
+}
+
 
 function createAPlot() {
-  
+
   note_data()
 
   TESTER = document.querySelector('#tester');
 
-  var trace1 = {
+  solve(args1[0], args1[1], args1[2], args2[0], args2[1], args2[2]);
+  solve(args1[0], args1[1], args1[2], args3[0], args3[1], args3[2]);
+  solve(args2[0], args2[1], args2[2], args3[0], args3[1], args3[2]);
+
+  let trace1 = {
     x: xs,
     y: y1Values,
     name: args1[0]+ 'x' + ' + ' + args1[1] + 'y' + ' = ' + args1[2],
     type: 'scatter'
   };
-  var trace2 = {
+
+  let trace2 = {
     x: xs,
     y: y2Values,
     name: args2[0]+ 'x' + ' + ' + args2[1] + 'y' + ' = ' + args2[2],
     type: 'scatter'
   };
 
-  var trace3 = {
+  let trace3 = {
     x: xs,
     y: y3Values,
     name: args3[0]+ 'x' + ' + ' + args3[1] + 'y' + ' = ' + args3[2],
     type: 'scatter'
   };
 
-  var trace4 = {
+  let trace4 = {
     x: [0, obj_func[0]],
     y: [0, obj_func[1]],
     name: 'Целевая функция',
@@ -95,7 +123,7 @@ function createAPlot() {
   };
 
 
-  var data = [trace1, trace2, trace3, trace4];
+  var data = [trace1, trace2, trace3, trace4, dot_trace];
 
   var layout = {
     legend: {
@@ -126,7 +154,7 @@ function createAPlot() {
       gridwidth: 2,
       zerolinecolor: '#969696',
       zerolinewidth: 4,
-      linecolor: '#636363',
+      linecolor: '#0B4571',
       linewidth: 6
     },
     yaxis: {
@@ -141,7 +169,7 @@ function createAPlot() {
       gridwidth: 2,
       zerolinecolor: '#969696',
       zerolinewidth: 4,
-      linecolor: '#636363',
+      linecolor: '#0B4571',
       linewidth: 6
     }
   };
