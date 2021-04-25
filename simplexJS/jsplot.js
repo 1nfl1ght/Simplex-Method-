@@ -6,7 +6,7 @@ function note_data() {
 
   window.xs = []
 
-  for (let i = -5; i < 11; i++) {
+  for (let i = -10; i < 31; i++) {
     xs.push(i);
   }
 
@@ -79,6 +79,40 @@ function solve(a, b, c, d, e, f) {
   }
 }
 
+function min_solve(a, b, c, d, e, f) {
+
+  window.min_y = (a * f - c * d)/(a * e - b * d);
+  window.min_x = (c * e - b * f)/(a * e - b * d);
+
+  let result = min_x*obj_func[0] + min_y*obj_func[1];
+
+  if (result == marks2[0]) {
+    window.min_trace = {
+      x: [min_x],
+      y: [min_y],
+      name: 'Минимальное значение',
+      mode: 'markers',
+      marker: {
+        color: 'blue',
+        symbol: 'circle',
+        size: 16
+      }
+    };
+  }
+  else if (marks2[0] == 0) {
+    window.min_trace = {
+      x: [0],
+      y: [0],
+      name: 'Минимальное значение',
+      mode: 'markers',
+      marker: {
+        color: 'blue',
+        symbol: 'circle',
+        size: 16
+      }
+    };
+  }
+}
 
 function createAPlot() {
 
@@ -89,6 +123,10 @@ function createAPlot() {
   solve(args1[0], args1[1], args1[2], args2[0], args2[1], args2[2]);
   solve(args1[0], args1[1], args1[2], args3[0], args3[1], args3[2]);
   solve(args2[0], args2[1], args2[2], args3[0], args3[1], args3[2]);
+
+  min_solve(args1[0], args1[1], args1[2], args2[0], args2[1], args2[2]);
+  min_solve(args1[0], args1[1], args1[2], args3[0], args3[1], args3[2]);
+  min_solve(args2[0], args2[1], args2[2], args3[0], args3[1], args3[2]);
 
   let trace1 = {
     x: xs,
@@ -123,7 +161,7 @@ function createAPlot() {
   };
 
 
-  var data = [trace1, trace2, trace3, trace4, dot_trace];
+  var data = [trace1, trace2, trace3, trace4, dot_trace, min_trace];
 
   var layout = {
     legend: {
