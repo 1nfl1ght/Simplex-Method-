@@ -9,7 +9,7 @@
     <script src="/script.js"></script>
     <script src="/jsplot.js"></script>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <title>Simplex calculator</title>
+    <title>Линейное программирование</title>
 </head>
 <body>
     <div class="main">
@@ -66,25 +66,29 @@
                     </td>
                 </tr>
             </table>
-            <div class="solution">
-                <h1>Целевая функция: </h1>
-                <div class="enter">
-                    <p style="margin: 0px 0px;">x<sub>1</sub></p>
-                    <input id="c1" type="number" value="0">
-                </div>
-                <div class="enter">
-                    <p style="margin: 0px 0px;">x<sub>2</sub></p>
-                    <input id="c2" type="number" value="0">
-                </div>
+        </div>
+        <div class="solution">
+            <h1>Целевая функция: </h1>
+            <div class="enter_1">
+                <p style="margin: 0px 0px;">x<sub>1</sub></p>
+                <input id="c1" type="number" value="0">
             </div>
-            <button class="btn" onclick="calc()" onselectstart="return false" onmousedown="return false">Вычислить</button>
-            <div class="finish">
-                <h1>Результат: <span id="output"></span></h1>
+            <div class="enter_2">
+                <p style="margin: 0px 0px;">x<sub>2</sub></p>
+                <input id="c2" type="number" value="0">
+            </div>
+            <div class="button_1">
+                <button class="btn" onclick="calc()" onselectstart="return false" onmousedown="return false">Вычислить максимум</button>
+            </div>
+            <div class="button_2">
+                <button class="btn" onclick="min_calc()" onselectstart="return false" onmousedown="return false">Вычислить минимум</button>
             </div>
         </div>
         <div class="feature">
-            
-            <button class="btn" onclick="createAPlot()" onselectstart="return false" onmousedown="return false">Построить график</button>
+            <h1>Максимум: <span id="output"></span></h1>
+            <div class="line"></div>
+            <h1>Минимум: <span id="output2"></span></h1>
+            <button class="btn" style="margin-bottom: 40px;" onclick="createAPlot()" onselectstart="return false" onmousedown="return false">Построить график</button>
             <div id="tester"></div>
         </div>
         </div>
