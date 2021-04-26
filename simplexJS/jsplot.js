@@ -86,7 +86,7 @@ function min_solve(a, b, c, d, e, f) {
 
   let result = min_x*obj_func[0] + min_y*obj_func[1];
 
-  if (result == marks2[0]) {
+  if (result == min_marks[0]) {
     window.min_trace = {
       x: [min_x],
       y: [min_y],
@@ -99,7 +99,7 @@ function min_solve(a, b, c, d, e, f) {
       }
     };
   }
-  else if (marks2[0] == 0) {
+  else if (min_marks[0] == 0) {
     window.min_trace = {
       x: [0],
       y: [0],
