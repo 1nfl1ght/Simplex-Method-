@@ -54,6 +54,7 @@ function argmin(your_arr) {
 }
 
 let marks = new Array();
+let min_marks = new Array();
 
 // Расчет оценок
 function deltaJ(matrix) {
@@ -187,6 +188,30 @@ function min_objective_func() {
     }
 }
 
+function min_deltaJ(matrix) {
+    let index_j = 1;  // индекс элементов массива с оценками
+    min_marks = [];
+    let a = min_marks.length;
+    while (a != 6){
+        mark = 0;
+        for (let i = 0; i < matrix.length; i++) {
+            mark += matrix[i][0] * matrix[i][index_j];
+        }
+        mark -= k[index_j - 1];
+        min_marks.push(mark);
+        a = min_marks.length;
+        index_j += 1;
+    }
+}
+
+function marks_check(grades) {
+    for (let i = 0; i < grades.length; i++) {
+        if (grades[i] < 0) {
+            return true;
+        }
+    }
+}
+
 function min_marks_check(grades) {
     for (let i = 0; i < grades.length; i++) {
         if (grades[i] > 0) {
@@ -219,9 +244,9 @@ function min_reference_elem(matrix, grades) {
 }
 
 function min_start() {
-    deltaJ(t);
-    while (min_marks_check(marks) == true) {
-       min_reference_elem(t, marks);
+    min_deltaJ(t);
+    while (min_marks_check(min_marks) == true) {
+       min_reference_elem(t, min_marks);
        new_iteration(t);
     //    console.log(t);
     //    console.log(marks);
@@ -240,8 +265,8 @@ function min_calc() {
     min_objective_func();
     
     min_start();
-    window.marks2 = [];
-    marks2 = marks.slice(0, marks.length);
+    // window.marks2 = [];
+    // marks2 = marks.slice(0, marks.length);
     // console.log(marks[0]);
-    document.querySelector('#output2').innerHTML = marks2[0];
+    document.querySelector('#output2').innerHTML = min_marks[0];
 }
