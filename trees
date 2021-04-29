@@ -93,6 +93,9 @@ bool all_positive(tree* t) {
             all_positive(t->l);
         }
     }
+    else {
+            cout << "Derevo imeet otrizatelnie elementy!";
+        }
 }
 
 void swap(tree* t, int sum) {
