@@ -1,0 +1,146 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+struct tree
+{
+    int info;
+    tree* l;
+    tree* r;
+};
+
+void add(tree* t, int x) {
+    tree* q;
+    if (x < t->info) {
+        if (t->l == NULL) {
+            q = new tree;
+            q->info = x;
+            q->l = NULL;
+            q->r = NULL;
+            t->l = q;
+        }
+        else {
+            add(t->l, x);
+        }
+    }
+    else
+    {
+        if (t->r == NULL) {
+            q = new tree;
+            q->info = x;
+            q->l = NULL;
+            q->r = NULL;
+            t->r = q;
+        }
+        else
+        {
+            add(t->r, x);
+        }
+    }
+}
+
+void print(tree* t) {
+    if (t != NULL) {
+        cout << t->info << " ";
+        print(t->l);
+        print(t->r);
+    }
+}
+
+bool positive(int x) {
+    return x > 0;
+}
+
+bool chet(int x) {
+    return x % 2 == 0;
+}
+
+bool prost(int x) {
+    int k = 0;
+    if (x == 1) {
+        return false;
+    }
+    for (int i = 1; i <= x; i++) {
+        if (x % i == 0)k++;
+    }
+    return k == 2;
+}
+
+void sum_prost(tree* t, int &s) {
+    if (t != NULL) {
+        if (prost(t->info)) {
+            s += t->info;
+            sum_prost(t->l, s);
+            sum_prost(t->r, s);
+        }
+        else {
+            sum_prost(t->l, s);
+            sum_prost(t->r, s);
+        }
+    }
+}
+
+bool all_positive(tree* t) {
+    bool f = true;
+    if (t != NULL) {
+        if (!positive(t->info)) {
+            f = false;
+            return f;
+        }
+        else
+        {
+            all_positive(t->r);
+            all_positive(t->l);
+        }
+    }
+}
+
+void swap(tree* t, int sum) {
+    if (t != NULL) {
+        if (all_positive(t)) {
+            if (chet(t->info)) {
+                t->info = sum;
+                swap(t->l, sum);
+                swap(t->r, sum);
+            }
+            else {
+                swap(t->l, sum);
+                swap(t->r, sum);
+            }
+        }
+    }
+}
+
+
+// Вставить перед каждым простым элемент, равный количеству цифр этого простого числа
+
+int main()
+{
+    int x, sum = 0;
+    cout << "Input number: ";
+    cin >> x;
+    
+    tree* root = new tree;
+
+    root->info = x;
+    root->l = NULL;
+    root->r = NULL;
+
+    while (x != 0) {
+        cin >> x;
+        if (x != 0) {
+            add(root, x);
+        }
+    }
+
+    cout << endl;
+    print(root);
+
+    sum_prost(root, sum);
+
+    swap(root, sum);
+
+    cout << endl;
+    print(root);
+    cout << endl << sum;
+}
