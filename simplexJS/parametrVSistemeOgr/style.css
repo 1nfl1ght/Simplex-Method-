@@ -1,0 +1,159 @@
+body {
+    font-family: 'Arial Narrow Bold', sans-serif;
+    color: white;
+    background-color: #E12D2F;
+}
+
+td > p {
+    margin-right: 10px;
+    font-size: 30px;
+}
+
+p {
+    font-size: 24px;
+}
+
+.main {
+    display: grid;
+    margin: auto;
+    grid-template-rows: auto;
+    grid-template-columns: 100%;
+    grid-gap: 30px;
+    width: 850px;
+    height: auto;
+    justify-content: space-between;
+    grid-template-areas:
+    "header"
+    "xxs"
+    "solution"
+    "feature"
+}
+
+.header > h1 {
+    grid-area: h1;
+}
+
+img {
+    filter: invert();
+    display: block;
+    float: right;
+    width: 90px;
+}
+
+.header > a {
+    grid-area: a;
+}
+
+.header{
+    padding: 10px 0px;
+    display: grid;
+    grid-template-columns: 80% 20%;
+    grid-area: header;
+    grid-template-areas:
+    "h1 a";
+}
+
+header > .odds{
+    grid-area: xxs;
+}
+
+table {
+    font-size: 24px;
+    text-align: center;
+}
+    
+.solution{
+    grid-area: solution;
+    height: auto;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1.5fr;
+    grid-template-areas: "label input input"
+                         "button button button";
+    grid-template-rows: 1fr 1fr;
+    grid-gap: 10px 0px;
+    align-items: end;
+    text-align: center;
+    justify-items: left;
+}
+
+.line {
+    width: 750px;
+    height: 4px;
+    border-radius: 10px;
+    background-color: white;
+}
+
+.enter_1 {
+    grid-row-start: 1;
+    grid-column-start: 2;
+}
+
+.enter_2 {
+    grid-row-start: 1;
+    grid-column-start: 3;
+}
+
+.button_1 {
+    grid-row-start: 2;
+    grid-column-start: 1;
+}
+
+.button_2 {
+    grid-row-start: 2;
+    grid-column-start: 2;
+}
+
+.solution > h1 {
+    grid-area: label;
+    margin: 0px;
+}
+
+.solution > .enter {
+    grid-area: input;
+}
+
+.solution > button {
+    grid-area: button;
+}
+
+input {
+    margin-right: 20px;
+    width: 120px;
+    height: 30px;
+    padding: 5px;
+    border: 3px solid white;
+    background: #E12D2F;
+    border-radius: 10px;
+    font-size: 20px;
+    color: white;
+    outline:none;
+}
+
+#add_col {
+    margin-bottom: 20px;
+}
+
+.btn {
+    width: 250px;
+    height: 50px;
+    border: 3px solid #0B4571;
+    background: white;
+    border-radius: 10px;
+    font-size: 20px;
+    color: black;
+    transition: 0.5s;
+}
+
+.btn:hover {
+    background-color: #E12D2F;
+    color: white;
+}
+
+.btn:active {
+    background-color: white;
+    color: black;
+}
+
+.feature {
+    grid-area: feature;
+}

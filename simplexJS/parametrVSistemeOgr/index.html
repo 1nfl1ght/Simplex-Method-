@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="calculator.png"/>
+    <script src="/script.js"></script>
+    <title>Линейное программирование</title>
+</head>
+<body>
+    <div class="main">
+        <div class="header">
+            <h1>Линейное программирование c параметром в свободных членах</h1>
+            <a href="https://github.com/1nfl1ght/Simplex-Method-Kolhozniy-" target="_blank"><img src="github_PNG20.png" alt="github"></a>
+        </div>
+        <div class="odds">
+            <button id="add_col" class="btn" onclick="Table(solTable).clone().setClass('t2').appendTo(document.body)" onselectstart="return false" onmousedown="return false">Добавить колонку</button>
+            <button id="add_date" class="btn" onselectstart="return false" onmousedown="return false">Сделать что то ещё</button>
+            <table id="solTable" class="t2">
+                <tr>
+                    <td>
+                        <input class="senses" type="number" value="0">
+                    </td>
+                    <td>
+                        <input class="senses" type="number" value="0">
+                    </td>
+                    <td><p>=</p></td>
+                    <td>
+                        <input class="limits" type="number" value="0">
+                    </td>
+                    <td>
+                        <input class="limits" type="number" value="0">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input class="senses" type="number" value="0">
+                    </td>
+                    <td>
+                        <input class="senses" type="number" value="0">
+                    </td>
+                    <td><p>=</p></td>
+                    <td>
+                        <input class="limits" type="number" value="0">
+                    </td>
+                    <td>
+                        <input class="limits" type="number" value="0">
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="solution">
+            <h1>Целевая функция: </h1>
+            <div class="enter_1">
+                <p style="margin: 0px;">x<sub>1</sub></p>
+                <input id="c1" type="number" value="0">
+            </div>
+            <div class="enter_2">
+                <p style="margin: 0px;">x<sub>2</sub></p>
+                <input id="c2" type="number" value="0">
+            </div>
+            <div class="button_1">
+                <button class="btn" onclick="console.log(listToMatrix(arr, 2))" onselectstart="return false" onmousedown="return false">Вычислить максимум</button>
+            </div>
+        </div>
+        <div class="feature">
+            <h1>Ответ: <span id="output"></span></h1>
+            <div class="line"></div>
+        </div>
+        </div>
+    </div>
+
+    <script>
+        let tbl = document.querySelector('#solTable'),
+        trs = tbl.querySelectorAll('tr'),
+        cnt = trs.length,
+        cols = 2;
+
+        document.getElementById('add_date').onclick = function(){
+            var i = 0;
+            for(let i = 0; i < cnt; i++){
+                var c = i > 1 ? 2 : 2,
+                    x = trs[i].insertCell(c);
+                x.innerHTML='<input class="senses" type="number" value="0">';
+            }
+        };
+
+        function Table(el){
+            if( !(this instanceof Table) ){
+                return new Table(el);
+            }
+            
+            this.el = el;
+        }
+
+        Table.prototype = {
+            constructor: Table,
+            
+            clone: function (){
+                var el = this.el.cloneNode(true);
+                el.id = '';
+                return Table(el);
+            },
+            
+            _each: function (name, iterator){
+                var items = this.el.getElementsByTagName(name);
+                var i = items.length;
+                while( i-- ){
+                    iterator(items[i]);
+                }
+            },
+            
+            setClass: function (name){
+                function _setClass(el){
+                    el.className = name;
+                }
+                _setClass(this.el);
+                this._each('th', _setClass);
+                this._each('td', _setClass);
+                return this;
+            },
+            
+            appendTo: function (target){
+                target.appendChild(this.el);
+                return this;
+            }
+         };
+    </script>
+</body>
+</html>
