@@ -1,89 +1,208 @@
-let k = ([0, 0, 0]);
+// Количество столбцов массива
+let ccol = 5;
 
-let t = ([[0, 0, 0, 0],
-          [0, 0, 0, 0]])
+// Количество строк массива
+let crow = 2;
 
-let initial_data = new Array();
+// Добавить колонку
+$(document).ready(function(){
+    $('#addColumnChild').click(function(){
+        $('#Atable tr').each(function(){
+        $(this).append('<td><input class="senses" type="number" value="0"></td>');
+        });
+        $('#ObjTable tr').append('<td><input class="objF" type="number" value="0"></td>');
+        ccol += 1;
+    });
+});
 
-let n = 1;
-let m = 2;
+// Добавить строку
+$(document).ready(function(){
+    $('#addRowChild').click(function(){
+        $('#default-row').clone().appendTo('#Atable');
+        $('#scnd-default-row').clone().appendTo('.BTable');
+        crow += 1;
+    });
+});
 
-function addRow() {
-    let sense = document.querySelector('.senses').value;
-    let limit = document.querySelector('.limits').value;
+// Удалить колонку
+$(document).ready(function(){
+    $('#delColumnChild').click(function(){
+        $('#Atable tr').each(function(){
+        $(this).find("td:last-child").remove();
+        });
+        $('#ObjTable tr').find("td:last-child").remove();
+        ccol -= 1;
+    });
+});
 
-    if (sense && limit) {
-        let tr = document.createElement('tr');
 
-        let 
+// Удалить строку
+$(document).ready(function(){
+    $('#delRowChild').click(function(){
+        $('#Atable').find("tr:last-child").remove();
+        $('.BTable').find("tr:last-child").remove();
+        crow -= 1;
+    });
+});
+  
+// Создание двумерного массива по исходным данным
+function Create2DArray(rows,columns) {
+    let x = new Array(rows);
+    for (var i = 0; i < rows; i++) {
+        x[i] = new Array(columns);
     }
+    return x;
 }
 
-function take_limits() {
-    lim_data = [];
-    let lim_input = document.querySelectorAll('.limits');
-    let limLength = lim_input.length;
+// Элементы целевой функции
+let k = [0, 0];
 
-    for (let i = 0; i < limLength; ++i) {
-        lim_data.push(parseFloat(lim_input[i].value));
-    }
+// Симплекс таблциа(пока ещё ни что)
+let t;
 
-    console.log(lim_data);
-}
-
-function take_senses() {
-    sense_data = [];
-    let sense_input = document.querySelectorAll('.senses');
-    let senseLength = sense_input.length;
-
-    for (let i = 0; i < senseLength; ++i) {
-        sense_data.push(parseFloat(sense_input[i].value));
-    }
-
-    console.log(sense_data);
-}
-
-// Создание двумерного массива
-function listToMatrix(list, elementsPerSubArray) {
-    var matrix = [], i, k;
-
-    for (i = 0, k = -1; i < list.length; i++) {
-        if (i % elementsPerSubArray === 0) {
-            k++;
-            matrix[k] = [];
-        }
-
-        matrix[k].push(list[i]);
-    }
-
-    return matrix;
-}
-
-function push_init(your_data) {
-    let p = 0;
-    for (let i = 0, j = 2; i < 3, j < your_data.length; i++, j+=3) {
-        t[i][1] = your_data[j];
-    }
-    for (let i = 0; i < 3; i++) {
-        for (let j = 2; j < 4; j++) {
-            if (p == 2 || p == 5) {
-                t[i][j] = initial_data[p+1];
-                p+=2;
-            }
-            else {
-                t[i][j] = initial_data[p];
-                p++;
-            }
+// Заполнение симплекс таблицы нулями перед началом работы
+function fillTable() {
+    t = Create2DArray(parseInt(crow),parseInt(ccol));
+    for (let i = 0; i < t.length; i++) {
+        for (let j = 0; j < t[i].length; j++) {
+            t[i][j] = 0;
         }
     }
 }
 
-function objective_func() {
-    for (let i = 1, j = 9; i < 2, j < 11; i++, j++) {
-        k[i] = initial_data[j];
+// Считавание данных из A
+function init_A() {
+    let A_data = [];
+    let Ainputs = document.querySelectorAll('.senses');
+    let ALength = Ainputs.length;
+
+    for (let i = 0; i < ALength; ++i) {
+        A_data.push(parseFloat(Ainputs[i].value))
+    }
+    // console.log(A_data);
+    // console.log(ccol, crow);
+    window.ATable = Create2DArray(parseInt(crow),parseInt(ccol-3));
+    let aindex = 0;
+    for (let i = 0; i < ATable.length; i++) {
+        for (let j = 0; j < ATable[i].length; j++) {
+            ATable[i][j] = A_data[aindex];
+            aindex += 1;
+        }
     }
 }
 
+// Считавание данных из всех B
+function init_B() {
+    let B_data = [];
+    let Binputs = document.querySelectorAll('.Blim');
+    let BLength = Binputs.length;
+
+    for (let i = 0; i < BLength; ++i) {
+        B_data.push(parseFloat(Binputs[i].value))
+    }
+    window.BTable = Create2DArray(parseInt(crow),parseInt(2));
+    let bindex = 0;
+    for (let i = 0; i < 2; i++) {
+        for (let j = 0; j < BTable.length; j++) {
+            BTable[j][i] = B_data[bindex];
+            bindex += 1;
+        }
+    }
+}
+
+// Считывание данных из С
+function init_C() {
+    window.C_data = [];
+    let Cinputs = document.querySelectorAll('.objF');
+    let CLength = Cinputs.length;
+
+    for (let i = 0; i < CLength; ++i) {
+        k.push(parseFloat(Cinputs[i].value));
+        C_data.push(parseFloat(Cinputs[i].value));
+    }
+}
+
+// Проверка столбцов
+function col_check(col_index) {
+    units = 0;
+    window.unit_pos = 0;
+    if (ATable[0][col_index] == 1) {
+        for (let i = 1; i < ATable.length; i++) {
+            if (ATable[i][col_index] != 0) {
+                return false;
+            }
+        }
+        unit_pos = 0;
+        return true;
+    }
+    else if (ATable[0][col_index] == 0) {
+        for (let i = 1; i < ATable.length; i++) {
+            if (ATable[i][col_index] != 0 && ATable[i][col_index] != 1) {
+                return false;
+            }
+            else if (ATable[i][col_index] == 1) {
+                units += 1;
+                unit_pos = i;
+            }
+            else if (ATable[i][col_index] == 0) {
+                continue;
+            }
+        }
+        if (units == 1) {
+            return true;
+        }
+    }
+    else {
+        return false;
+    }
+}
+
+// Определение базисных векторов и их индексов
+function find_bas() {
+    window.bas_index = [];
+    units_order = [];
+    for (let i = 0; i < ATable[0].length; i++) {
+        if (col_check(i)) {
+            bas_index.push(i);
+            units_order.push(unit_pos);
+        }
+    }
+}
+
+// Заполнение симплекс таблицы
+function fill_simplex() {
+    // Добавление элементов из A
+    fillTable();
+    init_A();
+    for (let i = 0; i < t.length; i++) {
+        for (let j = 0; j < ATable[i].length; j++) {
+            t[i][j + 3] = ATable[i][j];
+        }
+    }
+    
+    // Добавление элементов из B
+    init_B();
+    for (let i = 0; i < t.length; i++) {
+        for (let j = 0; j < BTable[i].length; j++) {
+            t[i][j + 1] = BTable[i][j];
+        }
+    }
+
+    init_C();
+    
+    // Нашёл и записал индексы базисных векторов 
+    find_bas();
+
+    //Добавил значения из C, соответствующие базисным векторам
+    for (let i = 0; i < t.length; i++) {
+        for (let j = 0; j < C_data.length; j++) {
+            if (j == bas_index[i])t[units_order[i]][0] = C_data[j];
+        }
+    }
+    console.log(t);
+}
+
+// Индекс минимального элемента массива
 function argmin(your_arr) {
     let min = your_arr[0];
     let index_min = 0;
@@ -96,6 +215,7 @@ function argmin(your_arr) {
     return index_min;
 }
 
+// Массив с оценками
 let marks = new Array();
 
 // Расчет оценок
@@ -103,7 +223,7 @@ function deltaJ(matrix) {
     let index_j = 1;  // индекс элементов массива с оценками
     marks = [];
     let a = marks.length;
-    while (a != 6){
+    while (a != (matrix.length-1)){
         mark = 0;
         for (let i = 0; i < matrix.length; i++) {
             mark += matrix[i][0] * matrix[i][index_j];
@@ -115,6 +235,7 @@ function deltaJ(matrix) {
     }
 }
 
+// Проверка оценок
 function marks_check(grades) {
     for (let i = 0; i < grades.length; i++) {
         if (grades[i] < 0) {
@@ -122,8 +243,6 @@ function marks_check(grades) {
         }
     }
 }
-    
-
 
 // Нахождение опорного элемента
 function reference_elem(matrix, grades) {
@@ -148,7 +267,8 @@ function reference_elem(matrix, grades) {
     reference = min_reference;
     return reference;
 }
-    
+
+// Копия дефолтной матрицы
 let m2 = new Array();
 
 // Создание новой таблицы на основе старой
@@ -157,8 +277,6 @@ function new_iteration(matrix) {
     for (let i = 0; i < matrix.length; i++) {
         m2.push(matrix[i].slice());
     }
-    // console.log("Копия пред матрицы: ");
-    // console.log(m2);
     let r = reference;  // Беру опорный элемент
     matrix[row_refer][0] = k[argmin(marks)]
     for (let i = 1; i < matrix[0].length; i++) {
@@ -176,29 +294,17 @@ function new_iteration(matrix) {
     deltaJ(matrix);
 }
 
-
 function start() {
     deltaJ(t);
     while (marks_check(marks) == true) {
        reference_elem(t, marks);
        new_iteration(t);
-    //    console.log(t);
-    //    console.log(marks);
     }
 }
 
 // Запуск программы
 function calc() {
-    k = ([0, 0, 0, 0, 0, 0]);
-    t = ([[0, 0, 0, 0, 1, 0, 0],
-         [0, 0, 0, 0, 0, 1, 0],
-         [0, 0, 0, 0, 0, 0, 1]])
-    write_init();
-    console.log(initial_data);
-    push_init(initial_data);
-    objective_func();
     
     start();
-    // console.log(marks[0]);
     document.querySelector('#output').innerHTML = marks[0];
 }
