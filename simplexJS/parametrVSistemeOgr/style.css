@@ -1,12 +1,7 @@
 body {
     font-family: 'Arial Narrow Bold', sans-serif;
     color: white;
-    background-color: #E12D2F;
-}
-
-td > p {
-    margin-right: 10px;
-    font-size: 30px;
+    background-color: #FF3333;
 }
 
 p {
@@ -18,13 +13,13 @@ p {
     margin: auto;
     grid-template-rows: auto;
     grid-template-columns: 100%;
-    grid-gap: 30px;
+    grid-gap: 15px;
     width: 850px;
     height: auto;
     justify-content: space-between;
     grid-template-areas:
     "header"
-    "xxs"
+    "initArea"
     "solution"
     "feature"
 }
@@ -54,7 +49,36 @@ img {
 }
 
 header > .odds{
-    grid-area: xxs;
+    grid-area: initArea;
+    display: grid;
+}
+
+.odds > .btn {
+    margin-top: auto;
+    font-size: 16px;
+    width: 180px;
+    height: 30px;
+    grid-area: btns;
+}
+
+.odds > h2 {
+    grid-area: h;
+}
+
+.odds > input {
+    grid-area: inputs;
+}
+
+.odds {
+    display: grid;
+    grid-area: initArea;
+    grid-template-columns: 50px 150px 190px 190px;
+    grid-template-rows: 100px auto auto auto auto;
+    grid-template-areas: "btns btns btns btns"
+                         "h inputs inputs inputs"
+                         "h inputs inputs inputs"
+                         "h inputs inputs inputs";
+    grid-row-gap: 10px;
 }
 
 table {
@@ -64,9 +88,10 @@ table {
     
 .solution{
     grid-area: solution;
+    width: auto;
     height: auto;
     display: grid;
-    grid-template-columns: 1.5fr 1fr 1.5fr;
+    grid-template-columns: 50px auto auto;
     grid-template-areas: "label input input"
                          "button button button";
     grid-template-rows: 1fr 1fr;
@@ -74,33 +99,19 @@ table {
     align-items: end;
     text-align: center;
     justify-items: left;
+    align-items: center;
 }
 
 .line {
-    width: 750px;
+    width: 100%;
     height: 4px;
     border-radius: 10px;
     background-color: white;
 }
 
-.enter_1 {
-    grid-row-start: 1;
-    grid-column-start: 2;
-}
-
-.enter_2 {
-    grid-row-start: 1;
-    grid-column-start: 3;
-}
-
-.button_1 {
+#button_1 {
     grid-row-start: 2;
     grid-column-start: 1;
-}
-
-.button_2 {
-    grid-row-start: 2;
-    grid-column-start: 2;
 }
 
 .solution > h1 {
@@ -112,17 +123,13 @@ table {
     grid-area: input;
 }
 
-.solution > button {
-    grid-area: button;
-}
-
 input {
-    margin-right: 20px;
+    margin: 5px;
     width: 120px;
     height: 30px;
     padding: 5px;
     border: 3px solid white;
-    background: #E12D2F;
+    background: #FF3333;
     border-radius: 10px;
     font-size: 20px;
     color: white;
@@ -134,11 +141,13 @@ input {
 }
 
 .btn {
+    cursor: pointer;
+    margin: 0px 0px 8px 0px;
     width: 250px;
-    height: 50px;
-    border: 3px solid #0B4571;
+    height: 40px;
+    border: 3px solid black;
     background: white;
-    border-radius: 10px;
+    border-radius: 8px;
     font-size: 20px;
     color: black;
     transition: 0.5s;
