@@ -35,7 +35,6 @@ $(document).ready(function(){
     });
 });
 
-
 // Удалить строку
 $(document).ready(function(){
     $('#delRowChild').click(function(){
@@ -79,8 +78,6 @@ function init_A() {
     for (let i = 0; i < ALength; ++i) {
         A_data.push(parseFloat(Ainputs[i].value))
     }
-    // console.log(A_data);
-    // console.log(ccol, crow);
     window.ATable = Create2DArray(parseInt(crow),parseInt(ccol-3));
     let aindex = 0;
     for (let i = 0; i < ATable.length; i++) {
@@ -199,6 +196,18 @@ function fill_simplex() {
             if (j == bas_index[i])t[units_order[i]][0] = C_data[j];
         }
     }
+
+    for (let i = 0; i < t.length; i++) {
+        if (t[i][1] < 0) {
+            for (let j = 1; j < t[i].length; j++) {
+                if (j == 2) {
+                    continue;
+                }
+                t[i][j] *= -1;
+            }
+        }
+        
+    }
     console.log(t);
 }
 
@@ -240,6 +249,56 @@ function marks_check(grades) {
     for (let i = 0; i < grades.length; i++) {
         if (grades[i] < 0) {
             return true;
+        }
+    }
+}
+
+// Определение интвервалов
+function intervals() {
+    let message1 = ('Решение оптимально для всех лямба > сигмы');
+    let message2 = ('Решение оптимально для всех лямба < сигмы');
+    let count_neg = 0;
+    let count_pos = 0;
+    let ratio_max = -t[0][2]/t[0][1];
+    let ratio_min = -t[0][2]/t[0][1];
+    let q_min
+    let p_min
+
+    for (let i = 0; i < t.length; i++) {
+        if (t[i][2] < 0) {
+            count_neg += 1;
+        }
+
+        else if (t[i][2] > 0) {
+            count_pos += 1;
+        }
+    }
+
+    if (count_neg == t.length) {
+        console.log(message2);
+    }
+    
+    else if (count_pos == t.length) {
+        console.log(message1);
+    }
+
+    else {
+        for (let i = 0; i < t.length; i ++) {
+            if (t[i][2] > 0) {
+                if (-t[i][2]/t[i][1] > ratio_max) {
+                    ratio_max = -t[i][2]/t[i][1];
+                    let q_max = t[i][1];
+                    let p_max = -t[i][2];
+                }
+            }
+
+            if (t[i][2] < 0) {
+                if (-t[i][2]/t[i][1] < ratio_min) {
+                    ratio_min = -t[i][2]/t[i][1];
+                    q_min = t[i][1];
+                    p_min = -t[i][2];
+                }
+            }
         }
     }
 }
