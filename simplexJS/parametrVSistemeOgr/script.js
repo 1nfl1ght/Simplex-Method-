@@ -254,6 +254,7 @@ function marks_check(grades) {
             return true;
         }
     }
+    return false;
 }
 
 // Проверка на конец программы
@@ -350,13 +351,13 @@ function research_intervals(your_row) {
 }
 
 let for_check; // Есил в след таблицу будут одинаковые соотношения лямбд
+let reference;
+let row_refer;
 
 // Опорный элемент для двойственного симплекс метода
 function dual_simplex_refer() {
     let score;
     window.refer_pos;
-    window.reference;
-    window.row_refer;
     if (research_intervals(output_row_max)) {
         row_refer = output_row_max; // Строка с опорным элементом
         for (let i = 3, j = 2; i < t[0][0].length, j < marks.length; i++, j++) {
@@ -417,28 +418,24 @@ function dual_simplex_refer() {
 }
 
 // Нахождение опорного элемента
-// function reference_elem(matrix, grades) {
-//     let score;
-//     window.reference;
-//     let min_reference;  // Будет возвращать значение опорного элемента
-//     window.row_refer; // Строка с опорным элементом
-//     for (let i = 0; i < matrix.length; i++) {
-//         if (matrix[i][argmin(grades) + 1] > 0) {
-//             min_reference = matrix[i][argmin(grades) + 1];
-//             row_refer = i;
-//             score = matrix[i][1] / min_reference;
-//             break;
-//         }
-//     }
-//     for (let i = 0; i < matrix.length; i++) {
-//         if ((matrix[i][1]/matrix[i][argmin(grades) + 1] < score) && (matrix[i][1]/matrix[i][argmin(grades) + 1] > 0)) {
-//             min_reference = matrix[i][argmin(grades) + 1];
-//             row_refer = i;
-//         }
-//     }
-//     reference = min_reference;
-//     return reference;
-// }
+function reference_elem(matrix, grades) {
+    let score_default;
+    window.row_refer; // Строка с опорным элементом
+    for (let i = 0; i < matrix.length; i++) {
+        if (matrix[i][argmin(grades) + 1] > 0) {
+            reference = matrix[i][argmin(grades) + 1];
+            row_refer = i;
+            score_default = matrix[i][1] / reference;
+            break;
+        }
+    }
+    for (let i = 0; i < matrix.length; i++) {
+        if ((matrix[i][1]/matrix[i][argmin(grades) + 1] < score_default) && (matrix[i][1]/matrix[i][argmin(grades) + 1] > 0)) {
+            reference = matrix[i][argmin(grades) + 1];
+            row_refer = i;
+        }
+    }
+}
 
 // Копия дефолтной матрицы
 
@@ -469,27 +466,28 @@ function new_iteration(matrix) {
 }
 
 // Создание новой таблицы на основе старой
-// function new_iteration(matrix) {
-//     let m2 = [];
-//     for (let i = 0; i < matrix.length; i++) {
-//         m2.push(matrix[i].slice());
-//     }
-//     let r = reference;  // Беру опорный элемент
-//     matrix[row_refer][0] = k[argmin(marks)]
-//     for (let i = 1; i < matrix[0].length; i++) {
-//         matrix[row_refer][i] /= r;
-//     }
-//     for (let i = 0; i < matrix.length; i++) {
-//         if (i == row_refer) {
-//             continue;
-//         }
+function new_iteration_default(matrix) {
+    let m2 = [];
+    for (let i = 0; i < matrix.length; i++) {
+        m2.push(matrix[i].slice());
+    }
+    let r = reference;  // Беру опорный элемент
+    matrix[row_refer][0] = k[argmin(marks)]
+    for (let i = 1; i < matrix[0].length; i++) {
+        matrix[row_refer][i] /= r;
+    }
+    for (let i = 0; i < matrix.length; i++) {
+        if (i == row_refer) {
+            continue;
+        }
             
-//         for (let j = 1; j < m2[i].length; j++) {
-//             matrix[i][j] = m2[i][j] - matrix[row_refer][j] * m2[i][argmin(marks) + 1];
-//         }
-//     }
-//     deltaJ(matrix);
-// }
+        for (let j = 1; j < m2[i].length; j++) {
+            matrix[i][j] = m2[i][j] - matrix[row_refer][j] * m2[i][argmin(marks) + 1];
+        }
+    }
+    console.log(m2)
+    deltaJ(matrix);
+}
 
 function test() {
     result = [];
@@ -498,50 +496,30 @@ function test() {
     console.log(marks);
     if (end_of_intervals()) {
         intervals();
-        dual_simplex_refer();
-        console.log(reference);
-        new_iteration(t);
-        console.log(t);
-        console.log("Оценки: " + marks);
-        console.log(result);
+        if (marks_check(marks)) {
+            reference_elem(t, marks);
+            new_iteration_default(t);
+            console.log(reference);
+            console.log(t);
+            console.log("Оценки: " + marks);
+            console.log(result);
+        }
+        else {
+            dual_simplex_refer();
+            new_iteration(t);
+            console.log(reference);
+            console.log(t);
+            console.log("Оценки: " + marks);
+            console.log(result);
+        }
     }
-    else {console.log(result);}
-    
-    ///
-    if (end_of_intervals()) {
-        intervals();
-        dual_simplex_refer();
-        console.log(reference);
-        new_iteration(t);
-        console.log(t);
-        console.log("Оценки: " + marks);
+    else {
         console.log(result);
-    }
-    else {console.log(result);}
-    ///
-    if (end_of_intervals()) {
-        intervals();
-        dual_simplex_refer();
-        console.log(reference);
-        new_iteration(t);
-        console.log(t);
-        console.log("Оценки: " + marks);
-        console.log(result);
-    }
-    else {console.log(result);}
-}
-
-function start() {
-    deltaJ(t);
-    while (marks_check(marks) == true) {
-       reference_elem(t, marks);
-       new_iteration(t);
     }
 }
 
 // Запуск программы
 function calc() {
-    
     start();
     document.querySelector('#output').innerHTML = marks[0];
 }
