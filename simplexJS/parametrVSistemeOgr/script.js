@@ -4,6 +4,8 @@ let ccol = 5;
 // Количество строк массива
 let crow = 2;
 
+let result; // Запись интервалов
+
 // Добавить колонку
 $(document).ready(function(){
     $('#addColumnChild').click(function(){
@@ -209,13 +211,14 @@ function fill_simplex() {
         
     }
     console.log(t);
+    console.log(k);
 }
 
 // Индекс минимального элемента массива
 function argmin(your_arr) {
     let min = your_arr[0];
     let index_min = 0;
-    for (let i = 0; i < your_arr.length; i++) {
+    for (let i = 2; i < your_arr.length; i++) {
         if (your_arr[i] < min) {
             min = your_arr[i];
             index_min = i;
@@ -232,7 +235,7 @@ function deltaJ(matrix) {
     let index_j = 1;  // индекс элементов массива с оценками
     marks = [];
     let a = marks.length;
-    while (a != (matrix.length-1)){
+    while (a != k.length) {
         mark = 0;
         for (let i = 0; i < matrix.length; i++) {
             mark += matrix[i][0] * matrix[i][index_j];
@@ -253,91 +256,202 @@ function marks_check(grades) {
     }
 }
 
-// Определение интвервалов
-function intervals() {
-    let message1 = ('Решение оптимально для всех лямба > сигмы');
-    let message2 = ('Решение оптимально для всех лямба < сигмы');
-    let count_neg = 0;
+// Проверка на конец программы
+function end_of_intervals() {
     let count_pos = 0;
-    let ratio_max = -t[0][2]/t[0][1];
-    let ratio_min = -t[0][2]/t[0][1];
-    let q_min
-    let p_min
+    let count_neg = 0;
 
     for (let i = 0; i < t.length; i++) {
+        if (t[i][2] > 0) {
+            count_pos += 1;
+        }
+
         if (t[i][2] < 0) {
             count_neg += 1;
         }
+    }
 
-        else if (t[i][2] > 0) {
-            count_pos += 1;
-        }
+    if (count_pos == t.length) {
+        result.push("Плюс бесконечность");
+        return false;
     }
 
     if (count_neg == t.length) {
-        console.log(message2);
+        result.push("Минус бесконечость");
+        return false;
     }
-    
-    else if (count_pos == t.length) {
-        console.log(message1);
+    return true;
+}
+
+// Определение интвервалов
+function intervals() {
+    let ratio_max;
+    let ratio_min;
+
+    for (let i  = 0; i < t.length; i++) {
+        if (t[i][2] > 0) {
+            ratio_max = -(t[i][1]/t[i][2]);
+            break;
+        }
     }
 
-    else {
-        for (let i = 0; i < t.length; i ++) {
-            if (t[i][2] > 0) {
-                if (-t[i][2]/t[i][1] > ratio_max) {
-                    ratio_max = -t[i][2]/t[i][1];
-                    let q_max = t[i][1];
-                    let p_max = -t[i][2];
-                }
+    for (let i  = 0; i < t.length; i++) {
+        if (t[i][2] < 0) {
+            ratio_min = -(t[i][1]/t[i][2]);
+            break;
+        }
+    }
+
+    window.q_min;
+    window.p_min;
+    window.q_max;
+    window.p_max;
+    // индекс строки, которая будет выводиться из базизса
+    window.output_row_max;
+    window.output_row_min;
+
+    for (let i = 0; i < t.length; i ++) {
+        // лямба штрих снизу
+        if (t[i][2] > 0) {
+            q_max = t[i][1];
+            p_max = -t[i][2];
+            if (-t[i][1]/t[i][2] >= ratio_max) {
+                ratio_max = -t[i][1]/t[i][2];
+                q_max = t[i][1];
+                p_max = -t[i][2];
+                output_row_max = i;
             }
+        }
 
-            if (t[i][2] < 0) {
-                if (-t[i][2]/t[i][1] < ratio_min) {
-                    ratio_min = -t[i][2]/t[i][1];
-                    q_min = t[i][1];
-                    p_min = -t[i][2];
+        // лямба штрих сверху
+        if (t[i][2] < 0) {
+            q_min = t[i][1];
+            p_min = -t[i][2];
+            if (-t[i][1]/t[i][2] <= ratio_min) {
+                ratio_min = -t[i][1]/t[i][2];
+                q_min = t[i][1];
+                p_min = -t[i][2];
+                output_row_min = i;
+            }
+        }
+    }
+    console.log("строка max: " + String(output_row_max));
+    console.log("строка min: " + String(output_row_min));
+}
+
+// исследование при лямба мин и макс. Проверяет, подходит ли для двойственного симплекс метода
+function research_intervals(your_row) {
+    for (let i = 3; i < t[0].length; i++) {
+        if (t[your_row][i] < 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
+let for_check; // Есил в след таблицу будут одинаковые соотношения лямбд
+
+// Опорный элемент для двойственного симплекс метода
+function dual_simplex_refer() {
+    let score;
+    window.refer_pos;
+    window.reference;
+    window.row_refer;
+    if (research_intervals(output_row_max)) {
+        row_refer = output_row_max; // Строка с опорным элементом
+        for (let i = 3, j = 2; i < t[0][0].length, j < marks.length; i++, j++) {
+            if (t[row_refer][i] < 0) {
+                reference = t[row_refer][i];
+                refer_pos = i;
+                score = marks[j]/t[row_refer][i];
+                for_check = t[row_refer][1]/-t[row_refer][2];
+                result.push(t[row_refer][1] + "/" + -t[row_refer][2]);
+                break;
+            }
+        }
+
+        for (let i = 3, j = 2; i < t[0][0].length, j < marks.length; i++, j++) {
+            if (t[row_refer][i] < 0) {
+                if (marks[j]/t[row_refer][i] < score) {
+                    reference = t[row_refer][i];
+                    for_check = t[row_refer][1]/-t[row_refer][2]
+                    result.push(t[row_refer][1] + "/" + -t[row_refer][2]);
+                    refer_pos = i;
                 }
             }
         }
+    }
+
+    else if (!research_intervals(output_row_max)) {
+        result.push("не имеет решений при лямбда < " + String(q_max) + "/" + String(-p_max));       
+    }
+
+    if (research_intervals(output_row_min)) {
+        row_refer = output_row_min; // Строка с опорным элементом
+        for (let i = 3, j = 2; i < t[0][0].length, j < marks.length; i++, j++) {
+            if (t[row_refer][i] < 0) {
+                reference = t[row_refer][i];
+                refer_pos = i;
+                score = marks[j]/t[row_refer][i];
+                for_check = t[row_refer][1]/-t[row_refer][2]
+                result.push(t[row_refer][1] + "/" + -t[row_refer][2]);
+                break;
+            }
+        }
+
+        for (let i = 3, j = 2; i < t[0][0].length, j < marks.length; i++, j++) {
+            if (t[row_refer][i] < 0) {
+                if (marks[j]/t[row_refer][i] < score) {
+                    reference = t[row_refer][i];
+                    for_check = t[row_refer][1]/-t[row_refer][2]
+                    result.push(t[row_refer][1] + "/" + -t[row_refer][2]);
+                    refer_pos = i;
+                }
+            }
+        }
+    }
+
+    else if (!research_intervals(output_row_min)){
+        result.push("Задача не имеет решений при лямба > " + String(q_min) + "/" + String(-p_min));
     }
 }
 
 // Нахождение опорного элемента
-function reference_elem(matrix, grades) {
-    let score;
-    window.reference;
-    let min_reference;  // Будет возвращать значение опорного элемента
-    window.row_refer; // Строка с опорным элементом
-    for (let i = 0; i < matrix.length; i++) {
-        if (matrix[i][argmin(grades) + 1] > 0) {
-            min_reference = matrix[i][argmin(grades) + 1];
-            row_refer = i;
-            score = matrix[i][1] / min_reference;
-            break;
-        }
-    }
-    for (let i = 0; i < matrix.length; i++) {
-        if ((matrix[i][1]/matrix[i][argmin(grades) + 1] < score) && (matrix[i][1]/matrix[i][argmin(grades) + 1] > 0)) {
-            min_reference = matrix[i][argmin(grades) + 1];
-            row_refer = i;
-        }
-    }
-    reference = min_reference;
-    return reference;
-}
+// function reference_elem(matrix, grades) {
+//     let score;
+//     window.reference;
+//     let min_reference;  // Будет возвращать значение опорного элемента
+//     window.row_refer; // Строка с опорным элементом
+//     for (let i = 0; i < matrix.length; i++) {
+//         if (matrix[i][argmin(grades) + 1] > 0) {
+//             min_reference = matrix[i][argmin(grades) + 1];
+//             row_refer = i;
+//             score = matrix[i][1] / min_reference;
+//             break;
+//         }
+//     }
+//     for (let i = 0; i < matrix.length; i++) {
+//         if ((matrix[i][1]/matrix[i][argmin(grades) + 1] < score) && (matrix[i][1]/matrix[i][argmin(grades) + 1] > 0)) {
+//             min_reference = matrix[i][argmin(grades) + 1];
+//             row_refer = i;
+//         }
+//     }
+//     reference = min_reference;
+//     return reference;
+// }
 
 // Копия дефолтной матрицы
+
 let m2 = new Array();
 
-// Создание новой таблицы на основе старой
+// Новая таблица 2
 function new_iteration(matrix) {
     let m2 = [];
     for (let i = 0; i < matrix.length; i++) {
         m2.push(matrix[i].slice());
     }
     let r = reference;  // Беру опорный элемент
-    matrix[row_refer][0] = k[argmin(marks)]
+    matrix[row_refer][0] = k[refer_pos - 1];
     for (let i = 1; i < matrix[0].length; i++) {
         matrix[row_refer][i] /= r;
     }
@@ -345,12 +459,76 @@ function new_iteration(matrix) {
         if (i == row_refer) {
             continue;
         }
-            
+         
         for (let j = 1; j < m2[i].length; j++) {
-            matrix[i][j] = m2[i][j] - matrix[row_refer][j] * m2[i][argmin(marks) + 1];
+            matrix[i][j] = m2[i][j] - matrix[row_refer][j] * m2[i][refer_pos];
         }
     }
+    console.log(m2);
     deltaJ(matrix);
+}
+
+// Создание новой таблицы на основе старой
+// function new_iteration(matrix) {
+//     let m2 = [];
+//     for (let i = 0; i < matrix.length; i++) {
+//         m2.push(matrix[i].slice());
+//     }
+//     let r = reference;  // Беру опорный элемент
+//     matrix[row_refer][0] = k[argmin(marks)]
+//     for (let i = 1; i < matrix[0].length; i++) {
+//         matrix[row_refer][i] /= r;
+//     }
+//     for (let i = 0; i < matrix.length; i++) {
+//         if (i == row_refer) {
+//             continue;
+//         }
+            
+//         for (let j = 1; j < m2[i].length; j++) {
+//             matrix[i][j] = m2[i][j] - matrix[row_refer][j] * m2[i][argmin(marks) + 1];
+//         }
+//     }
+//     deltaJ(matrix);
+// }
+
+function test() {
+    result = [];
+    fill_simplex();
+    deltaJ(t);
+    console.log(marks);
+    if (end_of_intervals()) {
+        intervals();
+        dual_simplex_refer();
+        console.log(reference);
+        new_iteration(t);
+        console.log(t);
+        console.log("Оценки: " + marks);
+        console.log(result);
+    }
+    else {console.log(result);}
+    
+    ///
+    if (end_of_intervals()) {
+        intervals();
+        dual_simplex_refer();
+        console.log(reference);
+        new_iteration(t);
+        console.log(t);
+        console.log("Оценки: " + marks);
+        console.log(result);
+    }
+    else {console.log(result);}
+    ///
+    if (end_of_intervals()) {
+        intervals();
+        dual_simplex_refer();
+        console.log(reference);
+        new_iteration(t);
+        console.log(t);
+        console.log("Оценки: " + marks);
+        console.log(result);
+    }
+    else {console.log(result);}
 }
 
 function start() {
