@@ -1,7 +1,7 @@
 body {
     font-family: 'Arial Narrow Bold', sans-serif;
     color: white;
-    background-color: #589254;
+    background-color: #36454F;
 }
 
 p {
@@ -129,7 +129,7 @@ input {
     height: 30px;
     padding: 5px;
     border: 3px solid white;
-    background: #589254;
+    background: #36454F;
     border-radius: 10px;
     font-size: 20px;
     color: white;
@@ -154,7 +154,7 @@ input {
 }
 
 .btn:hover {
-    background-color: #589254;
+    background-color: #36454F;
     color: white;
 }
 
