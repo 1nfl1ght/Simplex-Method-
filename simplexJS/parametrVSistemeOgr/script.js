@@ -249,7 +249,7 @@ function deltaJ(matrix) {
 
 // Проверка оценок
 function marks_check(grades) {
-    for (let i = 0; i < grades.length; i++) {
+    for (let i = 3; i < grades.length; i++) {
         if (grades[i] < 0) {
             return true;
         }
@@ -314,8 +314,6 @@ function intervals() {
     for (let i = 0; i < t.length; i ++) {
         // лямба штрих снизу
         if (t[i][2] > 0) {
-            q_max = t[i][1];
-            p_max = -t[i][2];
             if (-t[i][1]/t[i][2] >= ratio_max) {
                 ratio_max = -t[i][1]/t[i][2];
                 q_max = t[i][1];
@@ -326,8 +324,6 @@ function intervals() {
 
         // лямба штрих сверху
         if (t[i][2] < 0) {
-            q_min = t[i][1];
-            p_min = -t[i][2];
             if (-t[i][1]/t[i][2] <= ratio_min) {
                 ratio_min = -t[i][1]/t[i][2];
                 q_min = t[i][1];
@@ -420,7 +416,6 @@ function dual_simplex_refer() {
 // Нахождение опорного элемента
 function reference_elem(matrix, grades) {
     let score_default;
-    window.row_refer; // Строка с опорным элементом
     for (let i = 0; i < matrix.length; i++) {
         if (matrix[i][argmin(grades) + 1] > 0) {
             reference = matrix[i][argmin(grades) + 1];
@@ -494,9 +489,10 @@ function test() {
     fill_simplex();
     deltaJ(t);
     console.log(marks);
+
     if (end_of_intervals()) {
         intervals();
-        if (marks_check(marks)) {
+        if (marks_check(marks) == true) {
             reference_elem(t, marks);
             new_iteration_default(t);
             console.log(reference);
@@ -504,7 +500,7 @@ function test() {
             console.log("Оценки: " + marks);
             console.log(result);
         }
-        else {
+        else if (marks_check(marks) == false) {
             dual_simplex_refer();
             new_iteration(t);
             console.log(reference);
@@ -513,6 +509,30 @@ function test() {
             console.log(result);
         }
     }
+    else {
+        console.log(result);
+    }
+
+    if (end_of_intervals()) {
+        intervals();
+        if (marks_check(marks) == true) {
+            reference_elem(t, marks);
+            new_iteration_default(t);
+            console.log(reference);
+            console.log(t);
+            console.log("Оценки: " + marks);
+            console.log(result);
+        }
+        else if (marks_check(marks) == false) {
+            dual_simplex_refer();
+            new_iteration(t);
+            console.log(reference);
+            console.log(t);
+            console.log("Оценки: " + marks);
+            console.log(result);
+        }
+    }
+    
     else {
         console.log(result);
     }
