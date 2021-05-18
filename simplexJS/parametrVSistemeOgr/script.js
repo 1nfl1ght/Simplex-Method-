@@ -5,6 +5,8 @@ let ccol = 5;
 let crow = 2;
 
 let result; // Запись интервалов
+let result_max;
+let result_min;
 
 // Добавить колонку
 $(document).ready(function(){
@@ -229,6 +231,8 @@ function argmin(your_arr) {
 
 // Массив с оценками
 let marks = new Array();
+let marks_max = new Array();
+let marks_min = new Array();
 
 // Расчет оценок
 function deltaJ(matrix) {
@@ -247,6 +251,38 @@ function deltaJ(matrix) {
     }
 }
 
+function deltaJ_max(matrix) {
+    let index_j = 1;  // индекс элементов массива с оценками
+    marks_max = [];
+    let a = marks_max.length;
+    while (a != k.length) {
+        mark = 0;
+        for (let i = 0; i < matrix.length; i++) {
+            mark += matrix[i][0] * matrix[i][index_j];
+        }
+        mark -= k[index_j - 1];
+        marks_max.push(mark);
+        a = marks_max.length;
+        index_j += 1;
+    }
+}
+
+function deltaJ_min(matrix) {
+    let index_j = 1;  // индекс элементов массива с оценками
+    marks_min = [];
+    let a = marks_min.length;
+    while (a != k.length) {
+        mark = 0;
+        for (let i = 0; i < matrix.length; i++) {
+            mark += matrix[i][0] * matrix[i][index_j];
+        }
+        mark -= k[index_j - 1];
+        marks_min.push(mark);
+        a = marks_min.length;
+        index_j += 1;
+    }
+}
+
 // Проверка оценок
 function marks_check(grades) {
     for (let i = 3; i < grades.length; i++) {
@@ -258,7 +294,7 @@ function marks_check(grades) {
 }
 
 // Проверка на конец программы
-function end_of_intervals() {
+function end_of_intervals_max() {
     let count_pos = 0;
     let count_neg = 0;
 
@@ -273,14 +309,51 @@ function end_of_intervals() {
     }
 
     if (count_pos == t.length) {
-        result.push("Плюс бесконечность");
+        result_max.push("Плюс бесконечность");
         return false;
     }
 
     if (count_neg == t.length) {
-        result.push("Минус бесконечость");
+        result_max.push("Минус бесконечость");
         return false;
     }
+
+    if (!research_intervals(output_row_max)) {
+        result_max.push("не имеет решений при лямбда < " + String(q_max) + "/" + String(-p_max));
+        return false;
+    }
+    return true;
+}
+
+function end_of_intervals_min() {
+    let count_pos = 0;
+    let count_neg = 0;
+
+    for (let i = 0; i < t.length; i++) {
+        if (t[i][2] > 0) {
+            count_pos += 1;
+        }
+
+        if (t[i][2] < 0) {
+            count_neg += 1;
+        }
+    }
+
+    if (count_pos == t.length) {
+        result_min.push("Плюс бесконечность");
+        return false;
+    }
+
+    if (count_neg == t.length) {
+        result_min.push("Минус бесконечость");
+        return false;
+    }
+
+    if (!research_intervals(output_row_min)){
+        result_min.push("Задача не имеет решений при лямба > " + String(q_min) + "/" + String(-p_min));
+        return false;
+    }
+
     return true;
 }
 
@@ -303,10 +376,10 @@ function intervals() {
         }
     }
 
-    window.q_min;
-    window.p_min;
-    window.q_max;
-    window.p_max;
+    window.q_min = 0;
+    window.p_min = 0;
+    window.q_max = 0;
+    window.p_max = 0;
     // индекс строки, которая будет выводиться из базизса
     window.output_row_max;
     window.output_row_min;
@@ -346,74 +419,75 @@ function research_intervals(your_row) {
     return false;
 }
 
-let for_check; // Есил в след таблицу будут одинаковые соотношения лямбд
+let for_check_max; // Есил в след таблицу будут одинаковые соотношения лямбд
+let for_check_min; 
 let reference;
-let row_refer;
+let reference_max;
+let reference_min;
+let refer_pos_max;
+let refer_pos_min;
+let row_refer_max;
+let row_refer_min;
 
-// Опорный элемент для двойственного симплекс метода
-function dual_simplex_refer() {
-    let score;
-    window.refer_pos;
+// Опорный элемент для двойственного симплекс метода максимум
+function dual_simplex_refer_max(matrix) {
+    let score_max;
     if (research_intervals(output_row_max)) {
-        row_refer = output_row_max; // Строка с опорным элементом
-        for (let i = 3, j = 2; i < t[0][0].length, j < marks.length; i++, j++) {
-            if (t[row_refer][i] < 0) {
-                reference = t[row_refer][i];
-                refer_pos = i;
-                score = marks[j]/t[row_refer][i];
-                for_check = t[row_refer][1]/-t[row_refer][2];
-                result.push(t[row_refer][1] + "/" + -t[row_refer][2]);
+        row_refer_max = output_row_max; // Строка с опорным элементом
+        for (let i = 3, j = 2; i < matrix[0][0].length, j < marks_max.length; i++, j++) {
+            if (matrix[row_refer_max][i] < 0) {
+                reference_max = matrix[row_refer_max][i];
+                refer_pos_max = i;
+                score_max = marks_max[j]/matrix[row_refer_max][i];
+                for_check_max = matrix[row_refer_max][1]/-matrix[row_refer_max][2];
+                result.push(matrix[row_refer_max][1] + "/" + -matrix[row_refer_max][2]);
                 break;
             }
         }
 
-        for (let i = 3, j = 2; i < t[0][0].length, j < marks.length; i++, j++) {
-            if (t[row_refer][i] < 0) {
-                if (marks[j]/t[row_refer][i] < score) {
-                    reference = t[row_refer][i];
-                    for_check = t[row_refer][1]/-t[row_refer][2]
-                    result.push(t[row_refer][1] + "/" + -t[row_refer][2]);
-                    refer_pos = i;
+        for (let i = 3, j = 2; i < matrix[0][0].length, j < marks_max.length; i++, j++) {
+            if (matrix[row_refer_maxr][i] < 0) {
+                if (marks_max[j]/matrix[row_refer_max][i] < score_max) {
+                    reference = matrix[row_refer_max][i];
+                    for_check_max = matrix[row_refer_max][1]/-matrix[row_refer_max][2]
+                    result.push(matrix[row_refer_max][1] + "/" + -matrix[row_refer_max][2]);
+                    refer_pos_max = i;
                 }
             }
         }
-    }
-
-    else if (!research_intervals(output_row_max)) {
-        result.push("не имеет решений при лямбда < " + String(q_max) + "/" + String(-p_max));       
-    }
-
-    if (research_intervals(output_row_min)) {
-        row_refer = output_row_min; // Строка с опорным элементом
-        for (let i = 3, j = 2; i < t[0][0].length, j < marks.length; i++, j++) {
-            if (t[row_refer][i] < 0) {
-                reference = t[row_refer][i];
-                refer_pos = i;
-                score = marks[j]/t[row_refer][i];
-                for_check = t[row_refer][1]/-t[row_refer][2]
-                result.push(t[row_refer][1] + "/" + -t[row_refer][2]);
-                break;
-            }
-        }
-
-        for (let i = 3, j = 2; i < t[0][0].length, j < marks.length; i++, j++) {
-            if (t[row_refer][i] < 0) {
-                if (marks[j]/t[row_refer][i] < score) {
-                    reference = t[row_refer][i];
-                    for_check = t[row_refer][1]/-t[row_refer][2]
-                    result.push(t[row_refer][1] + "/" + -t[row_refer][2]);
-                    refer_pos = i;
-                }
-            }
-        }
-    }
-
-    else if (!research_intervals(output_row_min)){
-        result.push("Задача не имеет решений при лямба > " + String(q_min) + "/" + String(-p_min));
     }
 }
 
-// Нахождение опорного элемента
+// Опорный элемент для двойственного симплекс метода минимум
+function dual_simplex_refer_min(matrix) {
+    let score_min;
+    if (research_intervals(output_row_min)) {
+        row_refer_min = output_row_min; // Строка с опорным элементом
+        for (let i = 3, j = 2; i < matrix[0][0].length, j < marks_min.length; i++, j++) {
+            if (matrix[row_refer_min][i] < 0) {
+                reference_min = matrix[row_refer_min][i];
+                refer_pos_min = i;
+                score_min = marks_min[j]/matrix[row_refer_min][i];
+                for_check_min = matrix[row_refer_min][1]/-matrix[row_refer_min][2]
+                result.push(matrix[row_refer_min][1] + "/" + -matrix[row_refer_min][2]);
+                break;
+            }
+        }
+
+        for (let i = 3, j = 2; i < t[0][0].length, j < marks_min.length; i++, j++) {
+            if (matrix[row_refer_min][i] < 0) {
+                if (marks_min[j]/matrix[row_refer_min][i] < score_min) {
+                    reference_min = matrix[row_refer_min][i];
+                    for_check_min = matrix[row_refer_min][1]/-matrix[row_refer_min][2]
+                    result.push(matrix[row_refer_min][1] + "/" + -matrix[row_refer_min][2]);
+                    refer_pos_min = i;
+                }
+            }
+        }
+    }
+}
+
+// Нахождение опорного элемента обычного
 function reference_elem(matrix, grades) {
     let score_default;
     for (let i = 0; i < matrix.length; i++) {
@@ -433,31 +507,77 @@ function reference_elem(matrix, grades) {
 }
 
 // Копия дефолтной матрицы
-
 let m2 = new Array();
+let t_max = [];
+let t_min = [];
 
-// Новая таблица 2
-function new_iteration(matrix) {
+// Новая таблица по максимуму или минимуму
+function new_iteration_max(matrix) {
     let m2 = [];
-    for (let i = 0; i < matrix.length; i++) {
-        m2.push(matrix[i].slice());
+
+    if (t_max) {
+        for (let i = 0; i < t_max.length; i++) {
+            m2.push(t_max[i].slice());
+        }
     }
-    let r = reference;  // Беру опорный элемент
-    matrix[row_refer][0] = k[refer_pos - 1];
+
+    else { 
+        for (let i = 0; i < matrix.length; i++) {
+            m2.push(matrix[i].slice());
+        }
+        for (let i = 0; i < m2.length; i++) {
+            t_max.push(m2[i].slice());
+        }
+    }
+
+    let r = reference_max;  // Беру опорный элемент
+    t_max[row_refer_max][0] = k[refer_pos_max - 1];
     for (let i = 1; i < matrix[0].length; i++) {
-        matrix[row_refer][i] /= r;
+        t_max[row_refer_max][i] /= r;
     }
     for (let i = 0; i < matrix.length; i++) {
-        if (i == row_refer) {
+        if (i == row_refer_max) {
             continue;
         }
          
         for (let j = 1; j < m2[i].length; j++) {
-            matrix[i][j] = m2[i][j] - matrix[row_refer][j] * m2[i][refer_pos];
+            t_max[i][j] = m2[i][j] - matrix[row_refer_max][j] * m2[i][refer_pos_max];
         }
     }
-    console.log(m2);
-    deltaJ(matrix);
+}
+
+function new_iteration_min(matrix) {
+    let m2 = [];
+
+    if (t_min) {
+        for (let i = 0; i < t_min.length; i++) {
+            m2.push(t_min[i].slice());
+        }
+    }
+
+    else { 
+        for (let i = 0; i < matrix.length; i++) {
+            m2.push(matrix[i].slice());
+        }
+        for (let i = 0; i < m2.length; i++) {
+            t_min.push(m2[i].slice());
+        }
+    }
+
+    let r = reference_min;  // Беру опорный элемент
+    t_min[row_refer_min][0] = k[refer_pos_min - 1];
+    for (let i = 1; i < matrix[0].length; i++) {
+        t_min[row_refer_min][i] /= r;
+    }
+    for (let i = 0; i < matrix.length; i++) {
+        if (i == row_refer_min) {
+            continue;
+        }
+         
+        for (let j = 1; j < m2[i].length; j++) {
+            t_min[i][j] = m2[i][j] - matrix[row_refer_min][j] * m2[i][refer_pos_min];
+        }
+    }
 }
 
 // Создание новой таблицы на основе старой
@@ -480,8 +600,6 @@ function new_iteration_default(matrix) {
             matrix[i][j] = m2[i][j] - matrix[row_refer][j] * m2[i][argmin(marks) + 1];
         }
     }
-    console.log(m2)
-    deltaJ(matrix);
 }
 
 function test() {
@@ -489,53 +607,38 @@ function test() {
     fill_simplex();
     deltaJ(t);
     console.log(marks);
-
-    if (end_of_intervals()) {
-        intervals();
-        if (marks_check(marks) == true) {
-            reference_elem(t, marks);
-            new_iteration_default(t);
-            console.log(reference);
-            console.log(t);
-            console.log("Оценки: " + marks);
-            console.log(result);
-        }
-        else if (marks_check(marks) == false) {
-            dual_simplex_refer();
-            new_iteration(t);
-            console.log(reference);
-            console.log(t);
-            console.log("Оценки: " + marks);
-            console.log(result);
-        }
-    }
-    else {
-        console.log(result);
-    }
-
-    if (end_of_intervals()) {
-        intervals();
-        if (marks_check(marks) == true) {
-            reference_elem(t, marks);
-            new_iteration_default(t);
-            console.log(reference);
-            console.log(t);
-            console.log("Оценки: " + marks);
-            console.log(result);
-        }
-        else if (marks_check(marks) == false) {
-            dual_simplex_refer();
-            new_iteration(t);
-            console.log(reference);
-            console.log(t);
-            console.log("Оценки: " + marks);
-            console.log(result);
-        }
-    }
     
-    else {
-        console.log(result);
+    if (marks_check(marks)) {
+        reference_elem(t, marks);
+        new_iteration_default(t);
     }
+
+    else {
+        intervals();
+        if (output_row_max) {
+            if (research_intervals(output_row_max)) {
+                dual_simplex_refer_max(t);
+                new_iteration_max(t);
+            }
+            else if (!end_of_intervals_max()) {
+                console.log(result_max);
+            }
+        }
+
+        if (output_row_min) {
+            if (research_intervals(output_row_min)) {
+                dual_simplex_refer_min(t);
+                new_iteration_min(t);
+            }
+            else if (!end_of_intervals_min()) {
+                console.log(result_min);
+            }
+        }
+        else {
+            console.log(result_min,"-------", result_max);
+        }
+    }
+    console.log(result_min,"-------", result_max);
 }
 
 // Запуск программы
