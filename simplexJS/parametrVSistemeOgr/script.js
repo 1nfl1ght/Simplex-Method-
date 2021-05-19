@@ -430,29 +430,27 @@ let row_refer_max;
 let row_refer_min;
 
 // Опорный элемент для двойственного симплекс метода максимум
-function dual_simplex_refer_max(matrix) {
+function dual_simplex_refer_max() {
     let score_max;
-    if (research_intervals(output_row_max)) {
-        row_refer_max = output_row_max; // Строка с опорным элементом
-        for (let i = 3, j = 2; i < matrix[0][0].length, j < marks_max.length; i++, j++) {
-            if (matrix[row_refer_max][i] < 0) {
-                reference_max = matrix[row_refer_max][i];
-                refer_pos_max = i;
-                score_max = marks_max[j]/matrix[row_refer_max][i];
-                for_check_max = matrix[row_refer_max][1]/-matrix[row_refer_max][2];
-                result.push(matrix[row_refer_max][1] + "/" + -matrix[row_refer_max][2]);
-                break;
-            }
+    row_refer_max = output_row_max; // Строка с опорным элементом
+    for (let i = 3, j = 2; i < t_max[0][0].length, j < marks_max.length; i++, j++) {
+        if (t_max[row_refer_max][i] < 0) {
+            reference_max = t_max[row_refer_max][i];
+            refer_pos_max = i;
+            score_max = marks_max[j]/t_max[row_refer_max][i];
+            for_check_max = t_max[row_refer_max][1]/-t_max[row_refer_max][2];
+            result_max.push(t_max[row_refer_max][1] + "/" + -t_max[row_refer_max][2]);
+            break;
         }
+    }
 
-        for (let i = 3, j = 2; i < matrix[0][0].length, j < marks_max.length; i++, j++) {
-            if (matrix[row_refer_maxr][i] < 0) {
-                if (marks_max[j]/matrix[row_refer_max][i] < score_max) {
-                    reference = matrix[row_refer_max][i];
-                    for_check_max = matrix[row_refer_max][1]/-matrix[row_refer_max][2]
-                    result.push(matrix[row_refer_max][1] + "/" + -matrix[row_refer_max][2]);
-                    refer_pos_max = i;
-                }
+    for (let i = 3, j = 2; i < t_max[0][0].length, j < marks_max.length; i++, j++) {
+        if (t_max[row_refer_maxr][i] < 0) {
+            if (marks_max[j]/t_max[row_refer_max][i] < score_max) {
+                reference = t_max[row_refer_max][i];
+                for_check_max = t_max[row_refer_max][1]/-t_max[row_refer_max][2]
+                result_max.push(t_max[row_refer_max][1] + "/" + -t_max[row_refer_max][2]);
+                refer_pos_max = i;
             }
         }
     }
@@ -469,7 +467,7 @@ function dual_simplex_refer_min(matrix) {
                 refer_pos_min = i;
                 score_min = marks_min[j]/matrix[row_refer_min][i];
                 for_check_min = matrix[row_refer_min][1]/-matrix[row_refer_min][2]
-                result.push(matrix[row_refer_min][1] + "/" + -matrix[row_refer_min][2]);
+                result_min.push(matrix[row_refer_min][1] + "/" + -matrix[row_refer_min][2]);
                 break;
             }
         }
@@ -479,7 +477,7 @@ function dual_simplex_refer_min(matrix) {
                 if (marks_min[j]/matrix[row_refer_min][i] < score_min) {
                     reference_min = matrix[row_refer_min][i];
                     for_check_min = matrix[row_refer_min][1]/-matrix[row_refer_min][2]
-                    result.push(matrix[row_refer_min][1] + "/" + -matrix[row_refer_min][2]);
+                    result_min.push(matrix[row_refer_min][1] + "/" + -matrix[row_refer_min][2]);
                     refer_pos_min = i;
                 }
             }
@@ -507,7 +505,6 @@ function reference_elem(matrix, grades) {
 }
 
 // Копия дефолтной матрицы
-let m2 = new Array();
 let t_max = [];
 let t_min = [];
 
@@ -515,25 +512,14 @@ let t_min = [];
 function new_iteration_max(matrix) {
     let m2 = [];
 
-    if (t_max) {
-        for (let i = 0; i < t_max.length; i++) {
-            m2.push(t_max[i].slice());
-        }
-    }
-
-    else { 
-        for (let i = 0; i < matrix.length; i++) {
-            m2.push(matrix[i].slice());
-        }
-        for (let i = 0; i < m2.length; i++) {
-            t_max.push(m2[i].slice());
-        }
+    for (let i = 0; i < matrix.length; i++) {
+        m2.push(matrix[i].slice());
     }
 
     let r = reference_max;  // Беру опорный элемент
-    t_max[row_refer_max][0] = k[refer_pos_max - 1];
+    matrix[row_refer_max][0] = k[refer_pos_max - 1];
     for (let i = 1; i < matrix[0].length; i++) {
-        t_max[row_refer_max][i] /= r;
+        matrix[row_refer_max][i] /= r;
     }
     for (let i = 0; i < matrix.length; i++) {
         if (i == row_refer_max) {
@@ -541,7 +527,7 @@ function new_iteration_max(matrix) {
         }
          
         for (let j = 1; j < m2[i].length; j++) {
-            t_max[i][j] = m2[i][j] - matrix[row_refer_max][j] * m2[i][refer_pos_max];
+            matrix[i][j] = m2[i][j] - matrix[row_refer_max][j] * m2[i][refer_pos_max];
         }
     }
 }
@@ -549,19 +535,8 @@ function new_iteration_max(matrix) {
 function new_iteration_min(matrix) {
     let m2 = [];
 
-    if (t_min) {
-        for (let i = 0; i < t_min.length; i++) {
-            m2.push(t_min[i].slice());
-        }
-    }
-
-    else { 
-        for (let i = 0; i < matrix.length; i++) {
-            m2.push(matrix[i].slice());
-        }
-        for (let i = 0; i < m2.length; i++) {
-            t_min.push(m2[i].slice());
-        }
+    for (let i = 0; i < matrix.length; i++) {
+        m2.push(matrix[i].slice());
     }
 
     let r = reference_min;  // Беру опорный элемент
@@ -611,33 +586,86 @@ function test() {
     if (marks_check(marks)) {
         reference_elem(t, marks);
         new_iteration_default(t);
+        deltaJ(t);
     }
 
     else {
         intervals();
-        if (output_row_max) {
+        if (typeof output_row_max == 'number') {
             if (research_intervals(output_row_max)) {
-                dual_simplex_refer_max(t);
-                new_iteration_max(t);
+                for (let i = 0; i < t.length; i++) {
+                    t_max.push(t[i].slice());
+                }
+                marks_max = marks.slice();
+
+                dual_simplex_refer_max();
+                new_iteration_max(t_max);
+                deltaJ_max(t_max);
             }
+
             else if (!end_of_intervals_max()) {
                 console.log(result_max);
             }
         }
 
-        if (output_row_min) {
+        if (typeof output_row_min  == 'number') {
             if (research_intervals(output_row_min)) {
-                dual_simplex_refer_min(t);
-                new_iteration_min(t);
+                for (let i = 0; i < t.length; i++) {
+                    t_min.push(t[i].slice());
+                }
+                marks_min = marks.slice();
+                dual_simplex_refer_min(t_min);
+                new_iteration_min(t_min);
+                deltaJ_min(t_min);
             }
+
             else if (!end_of_intervals_min()) {
                 console.log(result_min);
             }
         }
-        else {
-            console.log(result_min,"-------", result_max);
+    }
+
+    console.log(result_min,"-------", result_max);
+
+    if (marks_check(marks)) {
+        reference_elem(t, marks);
+        new_iteration_default(t);
+        deltaJ(t);
+    }
+
+    else {
+        intervals();
+        if (typeof output_row_max == 'number') {
+            if (research_intervals(output_row_max)) {
+                for (let i = 0; i < t.length; i++) {
+                    t_max.push(t[i].slice());
+                }
+                dual_simplex_refer_max(t_max);
+                new_iteration_max(t_max);
+                deltaJ_max(t_max);
+            }
+
+            else if (!end_of_intervals_max()) {
+                console.log(result_max);
+            }
+        }
+
+        if (typeof output_row_min  == 'number') {
+            if (research_intervals(output_row_min)) {
+                for (let i = 0; i < t.length; i++) {
+                    t_min.push(t[i].slice());
+                }
+                dual_simplex_refer_min(t_min);
+                new_iteration_min(t_min);
+                deltaJ_min(t_min);
+            }
+
+            else if (!end_of_intervals_min()) {
+                console.log(result_min);
+            }
         }
     }
+
     console.log(result_min,"-------", result_max);
 }
 
