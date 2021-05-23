@@ -322,11 +322,11 @@ function end_of_intervals_max() {
     if (count_neg == t_max.length) {
         if (typeof q_max_max == "number" && typeof p_max_max == "number") {
             result_max.push((String(q_max_max) + "/" + String(-p_max_max)));
-            result_max.push("Минус бесконечость при лямбда < " + String(q_max_max) + "/" + String(-p_max_max));
+            result_max.push("Минус бесконечость при λ < " + String(q_max_max) + "/" + String(-p_max_max));
         }
         else {
             result_max.push((String(t_max[output_row_max][1]) + "/" + String(-t_max[output_row_max][2])));
-            result_max.push("Минус бесконечость при лямбда < " + String(t_max[output_row_max][1]) + "/" + String(-t_max[output_row_max][2]));
+            result_max.push("Минус бесконечость при λ < " + String(t_max[output_row_max][1]) + "/" + String(-t_max[output_row_max][2]));
         }
         return false;
     }
@@ -334,11 +334,11 @@ function end_of_intervals_max() {
     if (!research_intervals(output_row_max, t_max)) {
         if (typeof q_max_max == "number" && typeof p_max_max == "number") {
             result_max.push((String(q_max_max) + "/" + String(-p_max_max)));
-            result_max.push("не имеет решений при лямбда < " + String(q_max_max) + "/" + String(-p_max_max));
+            result_max.push("нет решений при λ < " + String(q_max_max) + "/" + String(-p_max_max));
         }
         else {
             result_max.push((String(t_max[output_row_max][1]) + "/" + String(-t_max[output_row_max][2])));
-            result_max.push("не имеет решений при лямбда < " + String(t_max[output_row_max][1]) + "/" + String(-t_max[output_row_max][2]));
+            result_max.push("нет решений при λ < " + String(t_max[output_row_max][1]) + "/" + String(-t_max[output_row_max][2]));
         }
         return false;
     }
@@ -357,11 +357,11 @@ function end_of_intervals_min() {
     if (count_pos == t.length) {
         if (typeof q_min_min == "number" && typeof p_min_min == "number") {
             result_min.push(String(q_min_min) + "/" + String(-p_min_min));
-            result_min.push("Плюс бесконечность при лямба > " + String(q_min_min) + "/" + String(-p_min_min));
+            result_min.push("Плюс бесконечность при λ > " + String(q_min_min) + "/" + String(-p_min_min));
         }
         else {
             result_min.push(String(t_min[output_row_min][1]) + "/" + String(-t_min[output_row_min][2]));
-            result_min.push("Плюс бесконечность при лямба > " + String(t_min[output_row_min][1]) + "/" + String(-t_min[output_row_min][2]));
+            result_min.push("Плюс бесконечность при λ > " + String(t_min[output_row_min][1]) + "/" + String(-t_min[output_row_min][2]));
         }
         return false;
     }
@@ -369,11 +369,11 @@ function end_of_intervals_min() {
     if (!research_intervals(output_row_min, t_min)){
         if (typeof q_min_min == "number" && typeof p_min_min == "number") {
             result_min.push(String(q_min_min) + "/" + String(-p_min_min));
-            result_min.push("Задача не имеет решений при лямба > " + String(q_min_min) + "/" + String(-p_min_min));
+            result_min.push("нет решений при λ > " + String(q_min_min) + "/" + String(-p_min_min));
         }
         else {
             result_min.push(String(t_min[output_row_min][1]) + "/" + String(-t_min[output_row_min][2]));
-            result_min.push("Задача не имеет решений при лямба > " + String(t_min[output_row_min][1]) + "/" + String(-t_min[output_row_min][2]));
+            result_min.push("нет решений при λ > " + String(t_min[output_row_min][1]) + "/" + String(-t_min[output_row_min][2]));
         }
         return false;
     }
