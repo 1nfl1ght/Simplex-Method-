@@ -1,3 +1,6 @@
+let l = [];
+let x = [];
+
 // Количество столбцов массива
 let ccol = 5;
 
@@ -191,7 +194,7 @@ function fill_simplex() {
 
     init_C();
     
-    // Нашёл и записал индексы базисных векторов 
+    // Нашёл и записал индексы базисных векторов
     find_bas();
 
     //Добавил значения из C, соответствующие базисным векторам
@@ -212,8 +215,6 @@ function fill_simplex() {
         }
         
     }
-    // console.log(t);
-    // console.log(k);
 }
 
 // Индекс минимального элемента массива
@@ -236,6 +237,7 @@ let marks_min = new Array();
 
 // Расчет оценок
 function deltaJ(matrix) {
+    let b = [];
     let index_j = 1;  // индекс элементов массива с оценками
     marks = [];
     let a = marks.length;
@@ -249,9 +251,14 @@ function deltaJ(matrix) {
         a = marks.length;
         index_j += 1;
     }
+    for (let i = 0; i < t.length; i++) {
+        b.push(String(t[i][1]) + " + " + String(t[i][2]));
+    }
+    x.push(b);
 }
 
 function deltaJ_max() {
+    let b = [];
     let index_j = 1;  // индекс элементов массива с оценками
     marks_max = [];
     let a = marks_max.length;
@@ -265,9 +272,14 @@ function deltaJ_max() {
         a = marks_max.length;
         index_j += 1;
     }
+    for (let i = 0; i < t_max.length; i++) {
+        b.push(String(t_max[i][1]) + " + " + String(t_max[i][2]));
+    }
+    x.push(b);
 }
 
 function deltaJ_min() {
+    let b = [];
     let index_j = 1;  // индекс элементов массива с оценками
     marks_min = [];
     let a = marks_min.length;
@@ -281,6 +293,10 @@ function deltaJ_min() {
         a = marks_min.length;
         index_j += 1;
     }
+    for (let i = 0; i < t_min.length; i++) {
+        b.push(String(t_min[i][1]) + " + " + String(t_min[i][2]));
+    }
+    x.push(b);
 }
 
 // Проверка оценок
@@ -709,15 +725,16 @@ function test() {
         new_iteration_default(t);
         deltaJ(t);
     }
+    console.log(t);
 
     intervals(t);
     if (typeof output_row_max == 'number') {
-        intervals(t);
         for (let i = 0; i < t.length; i++) {
             t_max.push(t[i].slice());
         }
+        intervals_max();
         marks_max = marks.slice();
-        if (research_intervals(output_row_max, t)) {
+        if (research_intervals(output_row_max, t_max)) {
             dual_simplex_refer_max();
             new_iteration_max();
             deltaJ_max(t_max);
@@ -735,12 +752,12 @@ function test() {
     console.log("Матрика макс: ", t_max);
 
     if (typeof output_row_min  == 'number') {
-        intervals(t);
         for (let i = 0; i < t.length; i++) {
             t_min.push(t[i].slice());
         }
+        intervals_min();
         marks_min = marks.slice();
-        if (research_intervals(output_row_min, t)) {
+        if (research_intervals(output_row_min, t_min)) {
             dual_simplex_refer_min();
             new_iteration_min();
             deltaJ_min(t_min);
@@ -761,6 +778,7 @@ function test() {
     let concResults = result_max.reverse().concat(result_min);
 
     console.log(concResults);
+    console.log(x);
 }
 
 // Запуск программы
