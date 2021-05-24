@@ -1,3 +1,4 @@
+let final_answer = [];
 let l = [];
 let x = [];
 
@@ -126,10 +127,12 @@ function init_C() {
     }
 }
 
+let unit_pos;
+
 // Проверка столбцов
 function col_check(col_index) {
     units = 0;
-    window.unit_pos = 0;
+    unit_pos = 0;
     if (ATable[0][col_index] == 1) {
         for (let i = 1; i < ATable.length; i++) {
             if (ATable[i][col_index] != 0) {
@@ -161,14 +164,88 @@ function col_check(col_index) {
     }
 }
 
+let unit_pos_all;
+
+function col_check_for_all(col_index, matrix) {
+    units = 0;
+    unit_pos_all = 0;
+    if (matrix[0][col_index] == 1) {
+        for (let i = 1; i < matrix.length; i++) {
+            if (matrix[i][col_index] != 0) {
+                return false;
+            }
+        }
+        unit_pos_all = 0;
+        return true;
+    }
+    else if (matrix[0][col_index] == 0) {
+        for (let i = 1; i < matrix.length; i++) {
+            if (matrix[i][col_index] != 0 && matrix[i][col_index] != 1) {
+                return false;
+            }
+            else if (matrix[i][col_index] == 1) {
+                units += 1;
+                unit_pos_all = i;
+            }
+            else if (matrix[i][col_index] == 0) {
+                continue;
+            }
+        }
+        if (units == 1) {
+            return true;
+        }
+    }
+    else {
+        return false;
+    }
+}
+
+let bas_index_max;
+let bas_index_min;
+let units_order_min;
+let units_order_max;
+
 // Определение базисных векторов и их индексов
 function find_bas() {
-    window.bas_index = [];
+    bas_index = [];
     units_order = [];
     for (let i = 0; i < ATable[0].length; i++) {
         if (col_check(i)) {
             bas_index.push(i);
             units_order.push(unit_pos);
+        }
+    }
+}
+
+function find_bas_default() {
+    bas_index_default = [];
+    units_order_defalut = [];
+    for (let i = 3; i < t[0].length; i++) {
+        if (col_check_for_all(i, t)) {
+            bas_index_default.push(i - 3);
+            units_order_defalut.push(unit_pos_all);
+        }
+    }
+}
+
+function find_bas_for_min() {
+    bas_index_min = [];
+    units_order_min = [];
+    for (let i = 3; i < t_min[0].length; i++) {
+        if (col_check_for_all(i, t_min)) {
+            bas_index_min.push(i - 3);
+            units_order_min.push(unit_pos_all);
+        }
+    }
+}
+
+function find_bas_for_max() {
+    bas_index_max = [];
+    units_order_max = [];
+    for (let i = 3; i < t_max[0].length; i++) {
+        if (col_check_for_all(i, t_max)) {
+            bas_index_max.push(i - 3);
+            units_order_max.push(unit_pos_all);
         }
     }
 }
@@ -237,7 +314,6 @@ let marks_min = new Array();
 
 // Расчет оценок
 function deltaJ(matrix) {
-    let b = [];
     let index_j = 1;  // индекс элементов массива с оценками
     marks = [];
     let a = marks.length;
@@ -251,10 +327,6 @@ function deltaJ(matrix) {
         a = marks.length;
         index_j += 1;
     }
-    for (let i = 0; i < t.length; i++) {
-        b.push(String(t[i][1]) + " + " + String(t[i][2]));
-    }
-    x.push(b);
 }
 
 function deltaJ_max() {
@@ -272,10 +344,23 @@ function deltaJ_max() {
         a = marks_max.length;
         index_j += 1;
     }
+
+    for (let i = 2; i < k.length; i++) {
+        b.push("0");
+    }
+
+    find_bas_for_max();
+
     for (let i = 0; i < t_max.length; i++) {
-        b.push(String(t_max[i][1]) + " + " + String(t_max[i][2]));
+        for (let j = 0; j < k.length - 2; j++) {
+            if (j == bas_index_max[i]) { 
+                b[j] = (String(t_max[units_order_max[i]][1]) + " + " + String(t_max[units_order_max[i]][2]) + "λ");
+            }
+        }
     }
     x.push(b);
+
+    l.push(String(marks_max[0]) + "+" + String(marks_max[1]) + "λ")
 }
 
 function deltaJ_min() {
@@ -293,10 +378,23 @@ function deltaJ_min() {
         a = marks_min.length;
         index_j += 1;
     }
+
+    for (let i = 2; i < k.length; i++) {
+        b.push("0");
+    }
+
+    find_bas_for_min();
+
     for (let i = 0; i < t_min.length; i++) {
-        b.push(String(t_min[i][1]) + " + " + String(t_min[i][2]));
+        for (let j = 0; j < k.length - 2; j++) {
+            if (j == bas_index_min[i]) { 
+                b[j] = (String(t_min[units_order_min[i]][1]) + " + " + String(t_min[units_order_min[i]][2]) + "λ");
+            }
+        }
     }
     x.push(b);
+
+    l.push(String(marks_min[0]) + "+" + String(marks_min[1]) + "λ")
 }
 
 // Проверка оценок
@@ -715,6 +813,7 @@ function new_iteration_default(matrix) {
 }
 
 function test() {
+    let b_default = [];
     result = [];
     fill_simplex();
     deltaJ(t);
@@ -725,6 +824,24 @@ function test() {
         new_iteration_default(t);
         deltaJ(t);
     }
+    
+    for (let i = 2; i < k.length; i++) {
+        b_default.push("0");
+    }
+
+    find_bas_default();
+
+    for (let i = 0; i < t.length; i++) {
+        for (let j = 0; j < k.length - 2; j++) {
+            if (j == bas_index_default[i]) { 
+                b_default[j] = (String(t[units_order_defalut[i]][1]) + " + " + String(t[units_order_defalut[i]][2]) + "λ");
+            }
+        }
+    }
+    x.push(b_default);
+
+    l.push(String(marks[0]) + "+" + String(marks[1]) + "λ");
+
     console.log(t);
 
     intervals(t);
@@ -774,15 +891,21 @@ function test() {
         }
     }
     console.log("Матрица мин: ", t_min);
-
     let concResults = result_max.reverse().concat(result_min);
+    console.log("Интвервалы: ", concResults);
+    console.log("x* = ", x);
+    console.log(k);
+    console.log("l* = ", l);
 
-    console.log(concResults);
-    console.log(x);
-}
-
-// Запуск программы
-function calc() {
-    start();
-    document.querySelector('#output').innerHTML = marks[0];
+    final_answer.push(concResults[0]);
+    let fa = [];
+    for (let i = 1; i < concResults.length - 2; i++) {
+        fa[i - 1] = ("При " + concResults[i] + " < λ < " + concResults[i+1] + ": " + "x* = (" + x[i - 1] + "), l* = (" + l[i - 1] + "). ");
+        console.log(fa[i - 1]);
+        final_answer.push(fa[i - 1]);
+    }
+    final_answer.push(concResults[concResults.length - 1]);
+    console.log(final_answer);
+    let out = document.querySelector('#output');
+    final_answer.forEach(e => out.innerHTML += "<p>" + e + "</p>");
 }
